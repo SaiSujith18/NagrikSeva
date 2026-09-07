@@ -62,9 +62,15 @@ app = FastAPI(
 # CORS
 # ============================================================
 
+FRONTEND_URL = os.getenv(
+    "FRONTEND_URL",
+    "http://localhost:5173"
+)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        FRONTEND_URL,
         "http://localhost:5173",
         "http://127.0.0.1:5173",
     ],
@@ -139,7 +145,8 @@ def normalize_language(language: str | None) -> str:
 
 MESSAGES = {
     "en": {
-        "empty": "Please enter a question.",
+        "empty":
+            "Please enter a question.",
 
         "not_found":
             "Sorry, I could not find information about that government service.",
@@ -207,6 +214,10 @@ MESSAGES = {
 }
 
 
+# ============================================================
+# GET LANGUAGE MESSAGE
+# ============================================================
+
 def get_message(
     language: str,
     key: str,
@@ -225,13 +236,17 @@ def get_message(
 
 
 # ============================================================
-# STARTUP
-#
-# services.json is loaded ONCE when backend starts.
+# SERVICES CACHE
 # ============================================================
 
 SERVICES_CACHE = []
 
+
+# ============================================================
+# STARTUP
+#
+# services.json is loaded ONCE when backend starts.
+# ============================================================
 
 @app.on_event("startup")
 def startup_event():
@@ -244,6 +259,7 @@ def startup_event():
     print("==========================================")
 
     try:
+
         SERVICES_CACHE = load_services()
 
         print(
@@ -263,10 +279,18 @@ def startup_event():
         raise
 
     print("Status           : RUNNING")
+
     print(
         "Languages        : English / Telugu / Hindi / Urdu"
     )
+
     print("Service data     : Loaded once")
+
+    print(
+        "Frontend URL     :",
+        FRONTEND_URL
+    )
+
     print("==========================================")
 
 
@@ -366,17 +390,6 @@ def ask(
 
     # --------------------------------------------------------
     # Determine language
-    #
-    # If frontend sends:
-    #
-    # language=te
-    # language=hi
-    # language=ur
-    # language=en
-    #
-    # use that selected language.
-    #
-    # If frontend sends auto, detect from query.
     # --------------------------------------------------------
 
     requested_language = (
@@ -405,7 +418,10 @@ def ask(
 
     print("")
     print("==========================================")
-    print("[ASK] Query              :", query)
+    print(
+        "[ASK] Query              :",
+        query
+    )
     print(
         "[ASK] Requested language:",
         requested_language
@@ -520,7 +536,8 @@ def ask(
     if not service:
 
         print(
-            "[ASK] Service ID was detected but service data was not found:",
+            "[ASK] Service ID was detected but "
+            "service data was not found:",
             service_id
         )
 
@@ -751,6 +768,7 @@ async def generate_stt(
         #
         # If transcript is returned in another script,
         # detect_language() will correct the final language.
+
         stt_language = "en"
 
     else:
@@ -781,7 +799,6 @@ async def generate_stt(
         audio_bytes
     )
 
-    # Important for Sarvam.
     audio_stream.name = (
         uploaded_file.filename
         or "nagrikseva.webm"
@@ -853,8 +870,6 @@ async def generate_stt(
 
     # --------------------------------------------------------
     # Detect transcript language
-    #
-    # This is especially useful when language=auto.
     # --------------------------------------------------------
 
     transcript_language = detect_language(
@@ -899,6 +914,7 @@ async def generate_stt(
             "en-IN",
         )
     )
+
 
     print("")
     print("==========================================")
