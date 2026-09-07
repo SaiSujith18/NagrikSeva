@@ -1,0 +1,705 @@
+[
+  {
+    "service_id": "income_certificate",
+    "service_name": {
+      "en": "Income Certificate",
+      "te": "ఆదాయ ధృవీకరణ పత్రం",
+      "hi": "आय प्रमाण पत्र",
+      "ur": "آمدنی کا سرٹیفکیٹ"
+    },
+    "category": "Certificates",
+    "department": "Revenue Department",
+    "government_level": "State",
+    "state": "Telangana",
+    "description": {
+      "en": "Official certificate used to certify a person's income.",
+      "te": "ఒక వ్యక్తి ఆదాయాన్ని ధృవీకరించడానికి ఉపయోగించే అధికారిక పత్రం.",
+      "hi": "किसी व्यक्ति की आय प्रमाणित करने के लिए उपयोग किया जाने वाला आधिकारिक प्रमाण पत्र।",
+      "ur": "کسی شخص کی آمدنی کی تصدیق کے لیے استعمال ہونے والا سرکاری سرٹیفکیٹ۔"
+    },
+    "eligibility": {
+      "en": ["Applicants requiring an official income certificate for a government or other eligible purpose."],
+      "te": ["ప్రభుత్వ లేదా ఇతర అర్హత ఉన్న అవసరాల కోసం ఆదాయ ధృవీకరణ పత్రం అవసరమైన దరఖాస్తుదారులు."],
+      "hi": ["सरकारी या अन्य पात्र उद्देश्य के लिए आय प्रमाण पत्र की आवश्यकता वाले आवेदक।"],
+      "ur": ["سرکاری یا دیگر اہل مقصد کے لیے آمدنی کے سرٹیفکیٹ کی ضرورت رکھنے والے درخواست دہندگان۔"]
+    },
+    "required_documents": {
+      "en": ["Identity and supporting income documents as required by MeeSeva/Revenue authorities."],
+      "te": ["మీసేవ/రెవెన్యూ అధికారులు కోరిన గుర్తింపు మరియు ఆదాయానికి సంబంధించిన పత్రాలు."],
+      "hi": ["मीसेवा/राजस्व अधिकारियों द्वारा मांगे गए पहचान और आय से संबंधित दस्तावेज।"],
+      "ur": ["می سیوا/ریونیو حکام کی طرف سے مطلوب شناخت اور آمدنی سے متعلق دستاویزات۔"]
+    },
+    "application_procedure": {
+      "en": [
+        "Open the official Telangana MeeSeva service.",
+        "Select the Income Certificate service.",
+        "Provide the required applicant information and supporting documents.",
+        "Submit the application and retain the application/reference number."
+      ],
+      "te": [
+        "తెలంగాణ మీసేవ అధికారిక సేవను తెరవండి.",
+        "ఆదాయ ధృవీకరణ పత్రం సేవను ఎంచుకోండి.",
+        "అవసరమైన దరఖాస్తుదారు వివరాలు మరియు పత్రాలను సమర్పించండి.",
+        "దరఖాస్తును సమర్పించి అప్లికేషన్/రిఫరెన్స్ నంబర్‌ను భద్రపరచండి."
+      ],
+      "hi": [
+        "तेलंगाना मीसेवा की आधिकारिक सेवा खोलें।",
+        "आय प्रमाण पत्र सेवा चुनें।",
+        "आवश्यक आवेदक विवरण और दस्तावेज जमा करें।",
+        "आवेदन जमा करें और आवेदन/संदर्भ संख्या सुरक्षित रखें।"
+      ],
+      "ur": [
+        "تلنگانہ می سیوا کی سرکاری سروس کھولیں۔",
+        "آمدنی کا سرٹیفکیٹ منتخب کریں۔",
+        "مطلوبہ درخواست گزار کی معلومات اور دستاویزات فراہم کریں۔",
+        "درخواست جمع کریں اور درخواست/حوالہ نمبر محفوظ رکھیں۔"
+      ]
+    },
+    "fees": "As applicable on the official MeeSeva portal.",
+    "processing_time": "As specified by the official MeeSeva service at the time of application.",
+    "contact_information": "Use the official Telangana MeeSeva portal/help channels.",
+    "last_verified_date": "2026-09-06",
+    "application_url": "https://ts.meeseva.telangana.gov.in/meeseva/home.htm",
+    "source_url": "https://www.telangana.gov.in/services/state-services/"
+  },
+
+  {
+    "service_id": "caste_certificate",
+    "service_name": {
+      "en": "Caste Certificate",
+      "te": "కుల ధృవీకరణ పత్రం",
+      "hi": "जाति प्रमाण पत्र",
+      "ur": "ذات کا سرٹیفکیٹ"
+    },
+    "category": "Certificates",
+    "department": "Revenue Department",
+    "government_level": "State",
+    "state": "Telangana",
+    "description": {
+      "en": "Official certificate used to identify or certify a person's caste or community.",
+      "te": "ఒక వ్యక్తి కులం లేదా సమాజాన్ని ధృవీకరించడానికి ఉపయోగించే అధికారిక పత్రం.",
+      "hi": "किसी व्यक्ति की जाति या समुदाय को प्रमाणित करने वाला आधिकारिक प्रमाण पत्र।",
+      "ur": "کسی شخص کی ذات یا برادری کی تصدیق کے لیے استعمال ہونے والا سرکاری سرٹیفکیٹ۔"
+    },
+    "eligibility": {
+      "en": ["Residents/applicants who require an official caste or community certificate."],
+      "te": ["అధికారిక కుల లేదా సమాజ ధృవీకరణ పత్రం అవసరమైన దరఖాస్తుదారులు."],
+      "hi": ["आधिकारिक जाति या समुदाय प्रमाण पत्र की आवश्यकता वाले आवेदक।"],
+      "ur": ["سرکاری ذات یا برادری کے سرٹیفکیٹ کی ضرورت رکھنے والے درخواست دہندگان۔"]
+    },
+    "required_documents": {
+      "en": ["Identity and caste/community supporting documents as required by the Revenue Department/MeeSeva."],
+      "te": ["రెవెన్యూ శాఖ/మీసేవ కోరిన గుర్తింపు మరియు కుల/సమాజానికి సంబంధించిన పత్రాలు."],
+      "hi": ["राजस्व विभाग/मीसेवा द्वारा मांगे गए पहचान और जाति/समुदाय संबंधी दस्तावेज।"],
+      "ur": ["ریونیو ڈیپارٹمنٹ/می سیوا کی طرف سے مطلوب شناخت اور ذات/برادری سے متعلق دستاویزات۔"]
+    },
+    "application_procedure": {
+      "en": [
+        "Open the official Telangana MeeSeva service.",
+        "Select the Caste Certificate service.",
+        "Enter the required details and upload/submit supporting documents.",
+        "Submit the application and retain the reference number."
+      ],
+      "te": [
+        "తెలంగాణ మీసేవ అధికారిక సేవను తెరవండి.",
+        "కుల ధృవీకరణ పత్రం సేవను ఎంచుకోండి.",
+        "అవసరమైన వివరాలు మరియు పత్రాలను సమర్పించండి.",
+        "దరఖాస్తును సమర్పించి రిఫరెన్స్ నంబర్‌ను భద్రపరచండి."
+      ],
+      "hi": [
+        "तेलंगाना मीसेवा की आधिकारिक सेवा खोलें।",
+        "जाति प्रमाण पत्र सेवा चुनें।",
+        "आवश्यक विवरण और दस्तावेज जमा करें।",
+        "आवेदन जमा करके संदर्भ संख्या सुरक्षित रखें।"
+      ],
+      "ur": [
+        "تلنگانہ می سیوا کی سرکاری سروس کھولیں۔",
+        "ذات کا سرٹیفکیٹ منتخب کریں۔",
+        "مطلوبہ معلومات اور دستاویزات جمع کریں۔",
+        "درخواست جمع کرکے حوالہ نمبر محفوظ رکھیں۔"
+      ]
+    },
+    "fees": "As applicable on the official MeeSeva portal.",
+    "processing_time": "As specified by the official MeeSeva service.",
+    "contact_information": "Use the official Telangana MeeSeva portal/help channels.",
+    "last_verified_date": "2026-09-06",
+    "application_url": "https://ts.meeseva.telangana.gov.in/meeseva/home.htm",
+    "source_url": "https://www.telangana.gov.in/services/state-services/"
+  },
+
+  {
+    "service_id": "residence_certificate",
+    "service_name": {
+      "en": "Residence Certificate",
+      "te": "నివాస ధృవీకరణ పత్రం",
+      "hi": "निवास प्रमाण पत्र",
+      "ur": "رہائشی سرٹیفکیٹ"
+    },
+    "category": "Certificates",
+    "department": "Revenue Department",
+    "government_level": "State",
+    "state": "Telangana",
+    "description": {
+      "en": "Official certificate used as proof of residence.",
+      "te": "నివాసానికి ఆధారంగా ఉపయోగించే అధికారిక ధృవీకరణ పత్రం.",
+      "hi": "निवास के प्रमाण के रूप में उपयोग किया जाने वाला आधिकारिक प्रमाण पत्र।",
+      "ur": "رہائش کے ثبوت کے طور پر استعمال ہونے والا سرکاری سرٹیفکیٹ۔"
+    },
+    "eligibility": {
+      "en": ["Applicants requiring official proof of residence."],
+      "te": ["అధికారిక నివాస ధృవీకరణ అవసరమైన దరఖాస్తుదారులు."],
+      "hi": ["आधिकारिक निवास प्रमाण की आवश्यकता वाले आवेदक।"],
+      "ur": ["سرکاری رہائش کے ثبوت کی ضرورت رکھنے والے درخواست دہندگان۔"]
+    },
+    "required_documents": {
+      "en": ["Identity and residence/address supporting documents as required by the Revenue Department/MeeSeva."],
+      "te": ["రెవెన్యూ శాఖ/మీసేవ కోరిన గుర్తింపు మరియు నివాస చిరునామాకు సంబంధించిన పత్రాలు."],
+      "hi": ["राजस्व विभाग/मीसेवा द्वारा मांगे गए पहचान और निवास/पते से संबंधित दस्तावेज।"],
+      "ur": ["ریونیو ڈیپارٹمنٹ/می سیوا کی طرف سے مطلوب شناخت اور رہائش/پتے سے متعلق دستاویزات۔"]
+    },
+    "application_procedure": {
+      "en": [
+        "Open the official Telangana MeeSeva service.",
+        "Select Residence Certificate.",
+        "Submit the required information and supporting documents.",
+        "Save the application/reference number."
+      ],
+      "te": [
+        "తెలంగాణ మీసేవ అధికారిక సేవను తెరవండి.",
+        "నివాస ధృవీకరణ పత్రం సేవను ఎంచుకోండి.",
+        "అవసరమైన వివరాలు మరియు పత్రాలను సమర్పించండి.",
+        "అప్లికేషన్/రిఫరెన్స్ నంబర్‌ను భద్రపరచండి."
+      ],
+      "hi": [
+        "तेलंगाना मीसेवा की आधिकारिक सेवा खोलें।",
+        "निवास प्रमाण पत्र चुनें।",
+        "आवश्यक जानकारी और दस्तावेज जमा करें।",
+        "आवेदन/संदर्भ संख्या सुरक्षित रखें।"
+      ],
+      "ur": [
+        "تلنگانہ می سیوا کی سرکاری سروس کھولیں۔",
+        "رہائشی سرٹیفکیٹ منتخب کریں۔",
+        "مطلوبہ معلومات اور دستاویزات جمع کریں۔",
+        "درخواست/حوالہ نمبر محفوظ رکھیں۔"
+      ]
+    },
+    "fees": "As applicable on the official MeeSeva portal.",
+    "processing_time": "As specified by the official MeeSeva service.",
+    "contact_information": "Use the official Telangana MeeSeva portal/help channels.",
+    "last_verified_date": "2026-09-06",
+    "application_url": "https://ts.meeseva.telangana.gov.in/meeseva/home.htm",
+    "source_url": "https://www.telangana.gov.in/services/state-services/"
+  },
+
+  {
+    "service_id": "birth_certificate",
+    "service_name": {
+      "en": "Birth Certificate",
+      "te": "జనన ధృవీకరణ పత్రం",
+      "hi": "जन्म प्रमाण पत्र",
+      "ur": "پیدائش کا سرٹیفکیٹ"
+    },
+    "category": "Municipal Services",
+    "department": "Commissioner & Director of Municipal Administration",
+    "government_level": "Local",
+    "state": "Telangana",
+    "description": {
+      "en": "Official document recording a person's birth.",
+      "te": "ఒక వ్యక్తి జననాన్ని నమోదు చేసే అధికారిక పత్రం.",
+      "hi": "किसी व्यक्ति के जन्म को दर्ज करने वाला आधिकारिक दस्तावेज।",
+      "ur": "کسی شخص کی پیدائش کا ریکارڈ رکھنے والی سرکاری دستاویز۔"
+    },
+    "eligibility": {
+      "en": ["Applicants requiring a birth certificate for a registered birth."],
+      "te": ["నమోదైన జననానికి జనన ధృవీకరణ పత్రం అవసరమైన దరఖాస్తుదారులు."],
+      "hi": ["पंजीकृत जन्म के लिए जन्म प्रमाण पत्र की आवश्यकता वाले आवेदक।"],
+      "ur": ["رجسٹرڈ پیدائش کے لیے پیدائش کے سرٹیفکیٹ کی ضرورت رکھنے والے درخواست دہندگان۔"]
+    },
+    "required_documents": {
+      "en": ["Documents required by the relevant municipal/local registration authority."],
+      "te": ["సంబంధిత మున్సిపల్/స్థానిక రిజిస్ట్రేషన్ అధికారి కోరిన పత్రాలు."],
+      "hi": ["संबंधित नगर निकाय/स्थानीय पंजीकरण प्राधिकरण द्वारा मांगे गए दस्तावेज।"],
+      "ur": ["متعلقہ میونسپل/مقامی رجسٹریشن اتھارٹی کی طرف سے مطلوب دستاویزات۔"]
+    },
+    "application_procedure": {
+      "en": [
+        "Open the official Telangana birth certificate service/form.",
+        "Provide the birth and applicant details.",
+        "Submit the required supporting information/documents.",
+        "Retain the application/reference details."
+      ],
+      "te": [
+        "తెలంగాణ అధికారిక జనన ధృవీకరణ సేవ/ఫారమ్‌ను తెరవండి.",
+        "జననం మరియు దరఖాస్తుదారు వివరాలను నమోదు చేయండి.",
+        "అవసరమైన వివరాలు/పత్రాలను సమర్పించండి.",
+        "అప్లికేషన్ వివరాలను భద్రపరచండి."
+      ],
+      "hi": [
+        "तेलंगाना की आधिकारिक जन्म प्रमाण पत्र सेवा/फॉर्म खोलें।",
+        "जन्म और आवेदक का विवरण दर्ज करें।",
+        "आवश्यक जानकारी/दस्तावेज जमा करें।",
+        "आवेदन विवरण सुरक्षित रखें।"
+      ],
+      "ur": [
+        "تلنگانہ کی سرکاری پیدائش کے سرٹیفکیٹ سروس/فارم کو کھولیں۔",
+        "پیدائش اور درخواست گزار کی معلومات درج کریں۔",
+        "مطلوبہ معلومات/دستاویزات جمع کریں۔",
+        "درخواست کی تفصیلات محفوظ رکھیں۔"
+      ]
+    },
+    "fees": "As applicable to the relevant local authority.",
+    "processing_time": "As specified by the relevant local authority.",
+    "contact_information": "Relevant municipal/local registration authority.",
+    "last_verified_date": "2026-09-06",
+    "application_url": "https://ts.meeseva.telangana.gov.in/meeseva/downloadzip.htm?filename=CDMAAPPLICATIONFORBIRTHCERTIFICATE.pdf",
+    "source_url": "https://www.telangana.gov.in/services/public-utility-forms/"
+  },
+
+  {
+    "service_id": "death_certificate",
+    "service_name": {
+      "en": "Death Certificate",
+      "te": "మరణ ధృవీకరణ పత్రం",
+      "hi": "मृत्यु प्रमाण पत्र",
+      "ur": "وفات کا سرٹیفکیٹ"
+    },
+    "category": "Municipal Services",
+    "department": "Commissioner & Director of Municipal Administration",
+    "government_level": "Local",
+    "state": "Telangana",
+    "description": {
+      "en": "Official document recording a person's death.",
+      "te": "ఒక వ్యక్తి మరణాన్ని నమోదు చేసే అధికారిక పత్రం.",
+      "hi": "किसी व्यक्ति की मृत्यु को दर्ज करने वाला आधिकारिक दस्तावेज।",
+      "ur": "کسی شخص کی وفات کا ریکارڈ رکھنے والی سرکاری دستاویز۔"
+    },
+    "eligibility": {
+      "en": ["Applicants requiring an official death certificate for a registered death."],
+      "te": ["నమోదైన మరణానికి అధికారిక మరణ ధృవీకరణ పత్రం అవసరమైన దరఖాస్తుదారులు."],
+      "hi": ["पंजीकृत मृत्यु के लिए आधिकारिक मृत्यु प्रमाण पत्र की आवश्यकता वाले आवेदक।"],
+      "ur": ["رجسٹرڈ وفات کے لیے سرکاری وفات کے سرٹیفکیٹ کی ضرورت رکھنے والے درخواست دہندگان۔"]
+    },
+    "required_documents": {
+      "en": ["Documents required by the relevant municipal/local registration authority."],
+      "te": ["సంబంధిత మున్సిపల్/స్థానిక రిజిస్ట్రేషన్ అధికారి కోరిన పత్రాలు."],
+      "hi": ["संबंधित नगर निकाय/स्थानीय पंजीकरण प्राधिकरण द्वारा मांगे गए दस्तावेज।"],
+      "ur": ["متعلقہ میونسپل/مقامی رجسٹریشن اتھارٹی کی طرف سے مطلوب دستاویزات۔"]
+    },
+    "application_procedure": {
+      "en": [
+        "Open the official Telangana death certificate service/form.",
+        "Provide the death and applicant details.",
+        "Submit the required information/documents.",
+        "Retain the application/reference details."
+      ],
+      "te": [
+        "తెలంగాణ అధికారిక మరణ ధృవీకరణ సేవ/ఫారమ్‌ను తెరవండి.",
+        "మరణం మరియు దరఖాస్తుదారు వివరాలను నమోదు చేయండి.",
+        "అవసరమైన సమాచారం/పత్రాలను సమర్పించండి.",
+        "అప్లికేషన్ వివరాలను భద్రపరచండి."
+      ],
+      "hi": [
+        "तेलंगाना की आधिकारिक मृत्यु प्रमाण पत्र सेवा/फॉर्म खोलें।",
+        "मृत्यु और आवेदक का विवरण दर्ज करें।",
+        "आवश्यक जानकारी/दस्तावेज जमा करें।",
+        "आवेदन विवरण सुरक्षित रखें।"
+      ],
+      "ur": [
+        "تلنگانہ کی سرکاری وفات کے سرٹیفکیٹ سروس/فارم کو کھولیں۔",
+        "وفات اور درخواست گزار کی معلومات درج کریں۔",
+        "مطلوبہ معلومات/دستاویزات جمع کریں۔",
+        "درخواست کی تفصیلات محفوظ رکھیں۔"
+      ]
+    },
+    "fees": "As applicable to the relevant local authority.",
+    "processing_time": "As specified by the relevant local authority.",
+    "contact_information": "Relevant municipal/local registration authority.",
+    "last_verified_date": "2026-09-06",
+    "application_url": "https://ts.meeseva.telangana.gov.in/meeseva/downloadzip.htm?filename=CDMAAPPLICATIONFORDEATHCERTIFICATE.pdf",
+    "source_url": "https://www.telangana.gov.in/services/public-utility-forms/"
+  },
+
+  {
+    "service_id": "family_member_certificate",
+    "service_name": {
+      "en": "Family Member Certificate",
+      "te": "కుటుంబ సభ్యుల ధృవీకరణ పత్రం",
+      "hi": "परिवार सदस्य प्रमाण पत्र",
+      "ur": "خاندانی رکن کا سرٹیفکیٹ"
+    },
+    "category": "Certificates",
+    "department": "Revenue Department",
+    "government_level": "State",
+    "state": "Telangana",
+    "description": {
+      "en": "Certificate used to establish or verify family member information.",
+      "te": "కుటుంబ సభ్యుల సమాచారాన్ని ధృవీకరించడానికి ఉపయోగించే పత్రం.",
+      "hi": "परिवार के सदस्यों की जानकारी स्थापित या सत्यापित करने के लिए उपयोग किया जाने वाला प्रमाण पत्र।",
+      "ur": "خاندان کے ارکان کی معلومات کی تصدیق کے لیے استعمال ہونے والا سرٹیفکیٹ۔"
+    },
+    "eligibility": {
+      "en": ["Applicants requiring an official family member certificate."],
+      "te": ["అధికారిక కుటుంబ సభ్యుల ధృవీకరణ పత్రం అవసరమైన దరఖాస్తుదారులు."],
+      "hi": ["आधिकारिक परिवार सदस्य प्रमाण पत्र की आवश्यकता वाले आवेदक।"],
+      "ur": ["سرکاری خاندانی رکن کے سرٹیفکیٹ کی ضرورت رکھنے والے درخواست دہندگان۔"]
+    },
+    "required_documents": {
+      "en": ["Identity and family relationship documents as required by the Revenue Department/MeeSeva."],
+      "te": ["రెవెన్యూ శాఖ/మీసేవ కోరిన గుర్తింపు మరియు కుటుంబ సంబంధ పత్రాలు."],
+      "hi": ["राजस्व विभाग/मीसेवा द्वारा मांगे गए पहचान और पारिवारिक संबंध दस्तावेज।"],
+      "ur": ["ریونیو ڈیپارٹمنٹ/می سیوا کی طرف سے مطلوب شناخت اور خاندانی تعلق کے دستاویزات۔"]
+    },
+    "application_procedure": {
+      "en": [
+        "Visit the official Telangana MeeSeva portal.",
+        "Select the Family Member Certificate service.",
+        "Provide the required family and applicant information.",
+        "Submit supporting documents and retain the application number."
+      ],
+      "te": [
+        "తెలంగాణ అధికారిక మీసేవ పోర్టల్‌ను తెరవండి.",
+        "కుటుంబ సభ్యుల ధృవీకరణ పత్రం సేవను ఎంచుకోండి.",
+        "అవసరమైన కుటుంబ మరియు దరఖాస్తుదారు వివరాలను నమోదు చేయండి.",
+        "పత్రాలను సమర్పించి అప్లికేషన్ నంబర్‌ను భద్రపరచండి."
+      ],
+      "hi": [
+        "तेलंगाना के आधिकारिक मीसेवा पोर्टल पर जाएं।",
+        "परिवार सदस्य प्रमाण पत्र सेवा चुनें।",
+        "आवश्यक पारिवारिक और आवेदक विवरण दर्ज करें।",
+        "दस्तावेज जमा करके आवेदन संख्या सुरक्षित रखें।"
+      ],
+      "ur": [
+        "تلنگانہ کے سرکاری می سیوا پورٹل پر جائیں۔",
+        "خاندانی رکن کا سرٹیفکیٹ منتخب کریں۔",
+        "مطلوبہ خاندانی اور درخواست گزار کی معلومات درج کریں۔",
+        "دستاویزات جمع کرکے درخواست نمبر محفوظ رکھیں۔"
+      ]
+    },
+    "fees": "As applicable on the official MeeSeva portal.",
+    "processing_time": "As specified by the official MeeSeva service.",
+    "contact_information": "Use the official Telangana MeeSeva portal/help channels.",
+    "last_verified_date": "2026-09-06",
+    "application_url": "https://ts.meeseva.telangana.gov.in/meeseva/home.htm",
+    "source_url": "https://www.telangana.gov.in/services/meeseva-services/"
+  },
+
+  {
+    "service_id": "property_tax",
+    "service_name": {
+      "en": "Property Tax",
+      "te": "ఆస్తి పన్ను",
+      "hi": "संपत्ति कर",
+      "ur": "جائیداد ٹیکس"
+    },
+    "category": "Municipal Services",
+    "department": "Commissioner & Director of Municipal Administration",
+    "government_level": "Local",
+    "state": "Telangana",
+    "description": {
+      "en": "Government service for property tax assessment, payment and related information.",
+      "te": "ఆస్తి పన్ను అంచనా, చెల్లింపు మరియు సంబంధిత సమాచారం కోసం ప్రభుత్వ సేవ.",
+      "hi": "संपत्ति कर आकलन, भुगतान और संबंधित जानकारी के लिए सरकारी सेवा।",
+      "ur": "جائیداد ٹیکس کی تشخیص، ادائیگی اور متعلقہ معلومات کے لیے سرکاری سروس۔"
+    },
+    "eligibility": {
+      "en": ["Property owners/taxpayers using the relevant Telangana municipal service."],
+      "te": ["తెలంగాణ సంబంధిత మున్సిపల్ సేవను ఉపయోగించే ఆస్తి యజమానులు/పన్ను చెల్లింపుదారులు."],
+      "hi": ["संबंधित तेलंगाना नगरपालिका सेवा का उपयोग करने वाले संपत्ति मालिक/करदाता।"],
+      "ur": ["متعلقہ تلنگانہ میونسپل سروس استعمال کرنے والے جائیداد مالکان/ٹیکس دہندگان۔"]
+    },
+    "required_documents": {
+      "en": ["Property/tax assessment details as required by the relevant municipality."],
+      "te": ["సంబంధిత మున్సిపాలిటీ కోరిన ఆస్తి/పన్ను అంచనా వివరాలు."],
+      "hi": ["संबंधित नगरपालिका द्वारा आवश्यक संपत्ति/कर आकलन विवरण।"],
+      "ur": ["متعلقہ میونسپلٹی کی طرف سے مطلوب جائیداد/ٹیکس تشخیصی تفصیلات۔"]
+    },
+    "application_procedure": {
+      "en": [
+        "Open the official Telangana municipal services portal.",
+        "Select Property Tax services.",
+        "Enter the property/tax details.",
+        "Complete the applicable payment or service request."
+      ],
+      "te": [
+        "తెలంగాణ అధికారిక మున్సిపల్ సేవల పోర్టల్‌ను తెరవండి.",
+        "ఆస్తి పన్ను సేవను ఎంచుకోండి.",
+        "ఆస్తి/పన్ను వివరాలను నమోదు చేయండి.",
+        "అవసరమైన చెల్లింపు లేదా సేవా అభ్యర్థనను పూర్తి చేయండి."
+      ],
+      "hi": [
+        "तेलंगाना के आधिकारिक नगरपालिका सेवा पोर्टल को खोलें।",
+        "संपत्ति कर सेवा चुनें।",
+        "संपत्ति/कर विवरण दर्ज करें।",
+        "लागू भुगतान या सेवा अनुरोध पूरा करें।"
+      ],
+      "ur": [
+        "تلنگانہ کے سرکاری میونسپل سروسز پورٹل کو کھولیں۔",
+        "جائیداد ٹیکس سروس منتخب کریں۔",
+        "جائیداد/ٹیکس کی تفصیلات درج کریں۔",
+        "متعلقہ ادائیگی یا سروس کی درخواست مکمل کریں۔"
+      ]
+    },
+    "fees": "Tax amount varies according to the applicable property assessment.",
+    "processing_time": "Depends on the selected municipal service.",
+    "contact_information": "Relevant Telangana municipality/ULB.",
+    "last_verified_date": "2026-09-06",
+    "application_url": "https://emunicipal.telangana.gov.in/",
+    "source_url": "https://www.telangana.gov.in/services/state-services/"
+  },
+
+  {
+    "service_id": "electricity_services",
+    "service_name": {
+      "en": "Electricity Services / Bill Payment",
+      "te": "విద్యుత్ సేవలు / బిల్లు చెల్లింపు",
+      "hi": "बिजली सेवाएं / बिल भुगतान",
+      "ur": "بجلی کی خدمات / بل کی ادائیگی"
+    },
+    "category": "Utilities",
+    "department": "Telangana Southern Power Distribution Company Limited",
+    "government_level": "State",
+    "state": "Telangana",
+    "description": {
+      "en": "Electricity-related citizen services including bill payment and service requests.",
+      "te": "బిల్లు చెల్లింపు మరియు సేవా అభ్యర్థనలతో సహా విద్యుత్ సంబంధిత పౌర సేవలు.",
+      "hi": "बिल भुगतान और सेवा अनुरोध सहित बिजली से संबंधित नागरिक सेवाएं।",
+      "ur": "بل کی ادائیگی اور سروس درخواستوں سمیت بجلی سے متعلق شہری خدمات۔"
+    },
+    "eligibility": {
+      "en": ["Consumers requiring electricity bill payment or an eligible electricity service request."],
+      "te": ["విద్యుత్ బిల్లు చెల్లింపు లేదా అర్హత ఉన్న విద్యుత్ సేవ అవసరమైన వినియోగదారులు."],
+      "hi": ["बिजली बिल भुगतान या पात्र बिजली सेवा की आवश्यकता वाले उपभोक्ता।"],
+      "ur": ["بجلی کے بل کی ادائیگی یا اہل بجلی سروس کی ضرورت رکھنے والے صارفین۔"]
+    },
+    "required_documents": {
+      "en": ["Consumer/service number and other information required by TGSPDCL for the selected service."],
+      "te": ["ఎంచుకున్న సేవ కోసం TGSPDCL కోరిన కన్స్యూమర్/సర్వీస్ నంబర్ మరియు ఇతర వివరాలు."],
+      "hi": ["चयनित सेवा के लिए TGSPDCL द्वारा आवश्यक उपभोक्ता/सेवा संख्या और अन्य विवरण।"],
+      "ur": ["منتخب سروس کے لیے TGSPDCL کی مطلوبہ صارف/سروس نمبر اور دیگر معلومات۔"]
+    },
+    "application_procedure": {
+      "en": [
+        "Open the official TGSPDCL portal.",
+        "Select Pay Bill, New Service Registration or the required service.",
+        "Enter the required consumer/service details.",
+        "Complete the transaction through the official portal."
+      ],
+      "te": [
+        "అధికారిక TGSPDCL పోర్టల్‌ను తెరవండి.",
+        "Pay Bill, New Service Registration లేదా అవసరమైన సేవను ఎంచుకోండి.",
+        "అవసరమైన వినియోగదారు/సేవ వివరాలను నమోదు చేయండి.",
+        "అధికారిక పోర్టల్ ద్వారా లావాదేవీని పూర్తి చేయండి."
+      ],
+      "hi": [
+        "आधिकारिक TGSPDCL पोर्टल खोलें।",
+        "Pay Bill, New Service Registration या आवश्यक सेवा चुनें।",
+        "आवश्यक उपभोक्ता/सेवा विवरण दर्ज करें।",
+        "आधिकारिक पोर्टल के माध्यम से लेनदेन पूरा करें।"
+      ],
+      "ur": [
+        "سرکاری TGSPDCL پورٹل کھولیں۔",
+        "Pay Bill، New Service Registration یا مطلوبہ سروس منتخب کریں۔",
+        "مطلوبہ صارف/سروس کی تفصیلات درج کریں۔",
+        "سرکاری پورٹل کے ذریعے لین دین مکمل کریں۔"
+      ]
+    },
+    "fees": "Bill amount/service charges as applicable.",
+    "processing_time": "Depends on the selected electricity service.",
+    "contact_information": "TGSPDCL official customer service and grievance channels.",
+    "last_verified_date": "2026-09-06",
+    "application_url": "https://tgspdclwebportal.tgsouthernpower.org/",
+    "source_url": "https://tgspdclwebportal.tgsouthernpower.org/"
+  },
+
+  {
+    "service_id": "water_services",
+    "service_name": {
+      "en": "Water Connection / Water Services",
+      "te": "నీటి కనెక్షన్ / నీటి సేవలు",
+      "hi": "जल कनेक्शन / जल सेवाएं",
+      "ur": "پانی کا کنکشن / پانی کی خدمات"
+    },
+    "category": "Utilities",
+    "department": "Commissioner & Director of Municipal Administration",
+    "government_level": "Local",
+    "state": "Telangana",
+    "description": {
+      "en": "Public water-related services including water connections and related requests.",
+      "te": "నీటి కనెక్షన్లు మరియు సంబంధిత అభ్యర్థనలతో సహా ప్రజా నీటి సేవలు.",
+      "hi": "जल कनेक्शन और संबंधित अनुरोधों सहित सार्वजनिक जल सेवाएं।",
+      "ur": "پانی کے کنکشن اور متعلقہ درخواستوں سمیت عوامی پانی کی خدمات۔"
+    },
+    "eligibility": {
+      "en": ["Applicants requiring an eligible municipal water connection/service."],
+      "te": ["అర్హత ఉన్న మున్సిపల్ నీటి కనెక్షన్/సేవ అవసరమైన దరఖాస్తుదారులు."],
+      "hi": ["पात्र नगरपालिका जल कनेक्शन/सेवा की आवश्यकता वाले आवेदक।"],
+      "ur": ["اہل میونسپل پانی کے کنکشن/سروس کی ضرورت رکھنے والے درخواست دہندگان۔"]
+    },
+    "required_documents": {
+      "en": ["Property/address and identity documents as required by the relevant municipal authority."],
+      "te": ["సంబంధిత మున్సిపల్ అధికారి కోరిన ఆస్తి/చిరునామా మరియు గుర్తింపు పత్రాలు."],
+      "hi": ["संबंधित नगरपालिका प्राधिकरण द्वारा आवश्यक संपत्ति/पता और पहचान दस्तावेज।"],
+      "ur": ["متعلقہ میونسپل اتھارٹی کی مطلوبہ جائیداد/پتہ اور شناختی دستاویزات۔"]
+    },
+    "application_procedure": {
+      "en": [
+        "Open the official Telangana municipal services portal or MeeSeva.",
+        "Select Permission for Water Connections.",
+        "Provide the required applicant/property information.",
+        "Submit the request and retain the reference number."
+      ],
+      "te": [
+        "తెలంగాణ అధికారిక మున్సిపల్ సేవల పోర్టల్ లేదా మీసేవను తెరవండి.",
+        "నీటి కనెక్షన్ అనుమతి సేవను ఎంచుకోండి.",
+        "అవసరమైన దరఖాస్తుదారు/ఆస్తి వివరాలను నమోదు చేయండి.",
+        "అభ్యర్థనను సమర్పించి రిఫరెన్స్ నంబర్‌ను భద్రపరచండి."
+      ],
+      "hi": [
+        "तेलंगाना के आधिकारिक नगरपालिका सेवा पोर्टल या मीसेवा को खोलें।",
+        "जल कनेक्शन की अनुमति सेवा चुनें।",
+        "आवश्यक आवेदक/संपत्ति विवरण दर्ज करें।",
+        "अनुरोध जमा करके संदर्भ संख्या सुरक्षित रखें।"
+      ],
+      "ur": [
+        "تلنگانہ کے سرکاری میونسپل سروسز پورٹل یا می سیوا کو کھولیں۔",
+        "پانی کے کنکشن کی اجازت منتخب کریں۔",
+        "مطلوبہ درخواست گزار/جائیداد کی تفصیلات درج کریں۔",
+        "درخواست جمع کرکے حوالہ نمبر محفوظ رکھیں۔"
+      ]
+    },
+    "fees": "As applicable to the relevant municipal water service.",
+    "processing_time": "As specified by the relevant municipal authority.",
+    "contact_information": "Relevant Telangana municipality/ULB.",
+    "last_verified_date": "2026-09-06",
+    "application_url": "https://ts.meeseva.telangana.gov.in/meeseva/home.htm",
+    "source_url": "https://www.telangana.gov.in/services/state-services/"
+  },
+
+  {
+    "service_id": "rta_services",
+    "service_name": {
+      "en": "RTA Services",
+      "te": "ఆర్‌టీఏ సేవలు",
+      "hi": "आरटीए सेवाएं",
+      "ur": "آر ٹی اے خدمات"
+    },
+    "category": "Transport",
+    "department": "Transport Department",
+    "government_level": "State",
+    "state": "Telangana",
+    "description": {
+      "en": "Transport-related citizen services including driving licence and vehicle services.",
+      "te": "డ్రైవింగ్ లైసెన్స్ మరియు వాహన సేవలతో సహా రవాణా సంబంధిత పౌర సేవలు.",
+      "hi": "ड्राइविंग लाइसेंस और वाहन सेवाओं सहित परिवहन संबंधी नागरिक सेवाएं।",
+      "ur": "ڈرائیونگ لائسنس اور گاڑیوں کی خدمات سمیت ٹرانسپورٹ سے متعلق شہری خدمات۔"
+    },
+    "eligibility": {
+      "en": ["Applicants requiring an eligible Telangana Transport Department service."],
+      "te": ["తెలంగాణ రవాణా శాఖ సేవ అవసరమైన అర్హత ఉన్న దరఖాస్తుదారులు."],
+      "hi": ["तेलंगाना परिवहन विभाग की पात्र सेवा की आवश्यकता वाले आवेदक।"],
+      "ur": ["تلنگانہ ٹرانسپورٹ ڈیپارٹمنٹ کی اہل سروس کی ضرورت رکھنے والے درخواست دہندگان۔"]
+    },
+    "required_documents": {
+      "en": ["Documents vary according to the selected transport service."],
+      "te": ["ఎంచుకున్న రవాణా సేవను బట్టి పత్రాలు మారవచ్చు."],
+      "hi": ["चयनित परिवहन सेवा के अनुसार दस्तावेज अलग-अलग हो सकते हैं।"],
+      "ur": ["منتخب ٹرانسپورٹ سروس کے مطابق دستاویزات مختلف ہو سکتے ہیں۔"]
+    },
+    "application_procedure": {
+      "en": [
+        "Open the official Telangana Transport Department service page.",
+        "Select the required driving licence or vehicle service.",
+        "Follow the official application instructions.",
+        "Submit the required information and retain the application/reference number."
+      ],
+      "te": [
+        "తెలంగాణ రవాణా శాఖ అధికారిక సేవా పేజీని తెరవండి.",
+        "అవసరమైన డ్రైవింగ్ లైసెన్స్ లేదా వాహన సేవను ఎంచుకోండి.",
+        "అధికారిక దరఖాస్తు సూచనలను అనుసరించండి.",
+        "అవసరమైన వివరాలను సమర్పించి అప్లికేషన్ నంబర్‌ను భద్రపరచండి."
+      ],
+      "hi": [
+        "तेलंगाना परिवहन विभाग की आधिकारिक सेवा पेज खोलें।",
+        "आवश्यक ड्राइविंग लाइसेंस या वाहन सेवा चुनें।",
+        "आधिकारिक आवेदन निर्देशों का पालन करें।",
+        "आवश्यक जानकारी जमा करके आवेदन/संदर्भ संख्या सुरक्षित रखें।"
+      ],
+      "ur": [
+        "تلنگانہ ٹرانسپورٹ ڈیپارٹمنٹ کا سرکاری سروس پیج کھولیں۔",
+        "مطلوبہ ڈرائیونگ لائسنس یا گاڑی کی سروس منتخب کریں۔",
+        "سرکاری درخواست کی ہدایات پر عمل کریں۔",
+        "مطلوبہ معلومات جمع کرکے درخواست/حوالہ نمبر محفوظ رکھیں۔"
+      ]
+    },
+    "fees": "As applicable to the selected Transport Department service.",
+    "processing_time": "As specified for the selected transport service.",
+    "contact_information": "Telangana Transport Department.",
+    "last_verified_date": "2026-09-06",
+    "application_url": "http://transport.telangana.gov.in/html/driving-licence.html",
+    "source_url": "https://www.telangana.gov.in/services/public-utility-forms/"
+  },
+
+  {
+    "service_id": "scholarships",
+    "service_name": {
+      "en": "Scholarships",
+      "te": "ఉపకార వేతనాలు",
+      "hi": "छात्रवृत्तियां",
+      "ur": "اسکالرشپس"
+    },
+    "category": "Education",
+    "department": "Social Welfare Department",
+    "government_level": "State",
+    "state": "Telangana",
+    "description": {
+      "en": "Information and application guidance for eligible students seeking government scholarship opportunities.",
+      "te": "ప్రభుత్వ ఉపకార వేతనాల కోసం అర్హత ఉన్న విద్యార్థులకు సమాచారం మరియు దరఖాస్తు మార్గదర్శకత్వం.",
+      "hi": "सरकारी छात्रवृत्ति के अवसरों की तलाश करने वाले पात्र छात्रों के लिए जानकारी और आवेदन मार्गदर्शन।",
+      "ur": "سرکاری اسکالرشپ کے مواقع تلاش کرنے والے اہل طلبہ کے لیے معلومات اور درخواست کی رہنمائی۔"
+    },
+    "eligibility": {
+      "en": ["Eligibility varies according to the scholarship scheme."],
+      "te": ["స్కాలర్‌షిప్ పథకం ఆధారంగా అర్హత మారుతుంది."],
+      "hi": ["पात्रता छात्रवृत्ति योजना के अनुसार अलग-अलग होती है।"],
+      "ur": ["اہلیت اسکالرشپ اسکیم کے مطابق مختلف ہوتی ہے۔"]
+    },
+    "required_documents": {
+      "en": ["Documents vary according to the scholarship scheme and applicant category."],
+      "te": ["స్కాలర్‌షిప్ పథకం మరియు దరఖాస్తుదారు వర్గాన్ని బట్టి పత్రాలు మారవచ్చు."],
+      "hi": ["छात्रवृत्ति योजना और आवेदक श्रेणी के अनुसार दस्तावेज अलग-अलग हो सकते हैं।"],
+      "ur": ["اسکالرشپ اسکیم اور درخواست گزار کی قسم کے مطابق دستاویزات مختلف ہو سکتے ہیں۔"]
+    },
+    "application_procedure": {
+      "en": [
+        "Open the official Telangana ePASS portal.",
+        "Select the appropriate scholarship application.",
+        "Register/login and provide the required student details.",
+        "Submit the application and retain the application/reference number."
+      ],
+      "te": [
+        "తెలంగాణ అధికారిక ePASS పోర్టల్‌ను తెరవండి.",
+        "తగిన స్కాలర్‌షిప్ దరఖాస్తును ఎంచుకోండి.",
+        "రిజిస్టర్/లాగిన్ చేసి అవసరమైన విద్యార్థి వివరాలను నమోదు చేయండి.",
+        "దరఖాస్తును సమర్పించి అప్లికేషన్ నంబర్‌ను భద్రపరచండి."
+      ],
+      "hi": [
+        "तेलंगाना के आधिकारिक ePASS पोर्टल को खोलें।",
+        "उपयुक्त छात्रवृत्ति आवेदन चुनें।",
+        "रजिस्टर/लॉगिन करके आवश्यक छात्र विवरण दर्ज करें।",
+        "आवेदन जमा करके आवेदन संख्या सुरक्षित रखें।"
+      ],
+      "ur": [
+        "تلنگانہ کا سرکاری ePASS پورٹل کھولیں۔",
+        "مناسب اسکالرشپ درخواست منتخب کریں۔",
+        "رجسٹر/لاگ ان کرکے مطلوبہ طالب علم کی معلومات درج کریں۔",
+        "درخواست جمع کرکے درخواست نمبر محفوظ رکھیں۔"
+      ]
+    },
+    "fees": "No application fee information specified here; check the selected scholarship scheme.",
+    "processing_time": "Varies according to the scholarship scheme and verification process.",
+    "contact_information": "Telangana ePASS official portal/help channels.",
+    "last_verified_date": "2026-09-06",
+    "application_url": "https://telanganaepass.cgg.gov.in/",
+    "source_url": "https://www.telangana.gov.in/services/state-services/"
+  }
+]

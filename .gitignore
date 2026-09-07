@@ -1,0 +1,160 @@
+# ============================================================
+# NAGRIKSEVA - Git Ignore
+# ============================================================
+
+# ------------------------------------------------------------
+# ENVIRONMENT / SECRETS
+# ------------------------------------------------------------
+
+.env
+.env.*
+!.env.example
+
+# Backend environment
+backend/.env
+backend/.env.*
+
+# Frontend environment
+frontend/.env
+frontend/.env.*
+
+# ------------------------------------------------------------
+# PYTHON
+# ------------------------------------------------------------
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+*.pyo
+*.pyd
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+backend/venv/
+backend/.venv/
+
+# ------------------------------------------------------------
+# CHROMADB / VECTOR DATABASE
+# ------------------------------------------------------------
+
+# Local ChromaDB generated database
+backend/data/chroma_db/
+data/chroma_db/
+
+# Chroma temporary/lock files
+*.sqlite3
+*.sqlite3-journal
+
+# ------------------------------------------------------------
+# NODE / FRONTEND
+# ------------------------------------------------------------
+
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Vite
+.vite/
+
+# Frontend cache
+.cache/
+.parcel-cache/
+
+# ------------------------------------------------------------
+# LOGS
+# ------------------------------------------------------------
+
+*.log
+logs/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ------------------------------------------------------------
+# OS FILES
+# ------------------------------------------------------------
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+# ------------------------------------------------------------
+# IDE / EDITOR
+# ------------------------------------------------------------
+
+.vscode/
+.idea/
+
+# VS Code local history
+.history/
+
+# ------------------------------------------------------------
+# PYTHON / JUPYTER
+# ------------------------------------------------------------
+
+.ipynb_checkpoints/
+
+# ------------------------------------------------------------
+# TEMPORARY FILES
+# ------------------------------------------------------------
+
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+
+# ------------------------------------------------------------
+# GENERATED AUDIO / UPLOADS
+# ------------------------------------------------------------
+
+*.wav
+*.mp3
+*.m4a
+*.ogg
+*.webm
+
+uploads/
+backend/uploads/
+tmp/
+temp/
+
+# ------------------------------------------------------------
+# TEST / COVERAGE OUTPUT
+# ------------------------------------------------------------
+
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# ------------------------------------------------------------
+# LOCAL CONFIGURATION
+# ------------------------------------------------------------
+
+*.local
