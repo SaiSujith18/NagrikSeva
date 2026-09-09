@@ -1,6 +1,3 @@
-# ============================================================
-# NAGRIKSEVA - backend/ai/vector_db.py
-# ============================================================
 
 import json
 import re
@@ -10,9 +7,6 @@ import chromadb
 from sentence_transformers import SentenceTransformer
 
 
-# ============================================================
-# PATHS
-# ============================================================
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -21,25 +15,15 @@ SERVICES_FILE = BASE_DIR / "data" / "services.json"
 CHROMA_DB_DIR = BASE_DIR / "data" / "chroma_db"
 
 
-# ============================================================
-# SUPPORTED LANGUAGES
-# ============================================================
-
 LANGUAGES = ["en", "te", "hi", "ur"]
 
-
-# ============================================================
-# EMBEDDING MODEL
-# ============================================================
 
 model = SentenceTransformer(
     "paraphrase-multilingual-MiniLM-L12-v2"
 )
 
 
-# ============================================================
-# CHROMA CLIENT
-# ============================================================
+
 
 chroma_client = chromadb.PersistentClient(
     path=str(CHROMA_DB_DIR)
@@ -50,9 +34,7 @@ collection = chroma_client.get_or_create_collection(
 )
 
 
-# ============================================================
-# LANGUAGE NORMALIZATION
-# ============================================================
+
 
 def normalize_language(language: str) -> str:
 
@@ -78,9 +60,7 @@ def normalize_language(language: str) -> str:
     return "en"
 
 
-# ============================================================
-# LOAD SERVICES
-# ============================================================
+
 
 def load_services():
 
@@ -105,13 +85,7 @@ def load_services():
     return data
 
 
-# ============================================================
-# SERVICE KEYWORDS
-#
-# These are used as an additional deterministic signal.
-# This prevents similar certificate services from being
-# confused with each other.
-# ============================================================
+
 
 KEYWORDS = {
 
@@ -589,9 +563,6 @@ KEYWORDS = {
 }
 
 
-# ============================================================
-# CREATE SERVICE TEXT
-# ============================================================
 
 def create_service_text(
     service,
@@ -634,9 +605,7 @@ def create_service_text(
     ).strip()
 
 
-# ============================================================
-# BUILD VECTOR DATABASE
-# ============================================================
+
 
 def build_vector_database():
 
@@ -729,9 +698,7 @@ def build_vector_database():
     return len(documents)
 
 
-# ============================================================
-# NORMALIZE SEARCH TEXT
-# ============================================================
+
 
 def normalize_search_text(text: str) -> str:
 
@@ -746,9 +713,6 @@ def normalize_search_text(text: str) -> str:
     return text
 
 
-# ============================================================
-# KEYWORD SCORE
-# ============================================================
 
 def keyword_score(
     query: str,
@@ -790,9 +754,6 @@ def keyword_score(
     return score
 
 
-# ============================================================
-# SERVICE-SPECIFIC BOOST
-# ============================================================
 
 def calculate_service_score(
     query: str,
@@ -829,9 +790,7 @@ def calculate_service_score(
     return semantic_score + keyword_boost
 
 
-# ============================================================
-# SEMANTIC + KEYWORD SEARCH
-# ============================================================
+
 
 def semantic_search(
     query,
@@ -847,22 +806,14 @@ def semantic_search(
 
     query = str(query).strip()
 
-    # --------------------------------------------------------
-    # Encode query
-    # --------------------------------------------------------
+  
 
     query_embedding = model.encode(
         [query],
         normalize_embeddings=True
     ).tolist()
 
-    # --------------------------------------------------------
-    # Retrieve more candidates than requested.
-    #
-    # This allows our keyword ranking to choose the
-    # correct service instead of blindly taking Chroma's
-    # first result.
-    # --------------------------------------------------------
+  
 
     candidate_count = max(
         top_k,
