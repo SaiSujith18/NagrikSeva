@@ -1,8 +1,8 @@
 {
-  "services": {
-    "backend": {
-      "root": "backend/",
-      "entrypoint": "main:app"
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "http://65.0.107.41:8000/:path*"
     }
-  }
+  ]
 }
