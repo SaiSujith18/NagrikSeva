@@ -2,10 +2,25 @@ import { useEffect, useRef, useState } from "react";
 import "./App.css";
 
 // ============================================================
-// API
+// API CONFIGURATION
+// ============================================================
+// Production on Vercel:
+// Browser calls /api/... and vercel.json proxies it to backend.
+//
+// Local development:
+// Calls localhost:8000 directly.
+//
+// IMPORTANT:
+// Do NOT put http://65.0.107.41:8000 directly in frontend
+// when the frontend is hosted on HTTPS.
 // ============================================================
 
-const API_BASE = "/api";
+const API_BASE =
+  import.meta.env.VITE_API_BASE_URL ||
+  (window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1"
+    ? "http://127.0.0.1:8000"
+    : "/api");
 
 // ============================================================
 // LANGUAGES
@@ -31,28 +46,51 @@ const LANGUAGES = {
 };
 
 // ============================================================
+// HELPER - SAFE JSON RESPONSE
+// ============================================================
+
+async function parseResponse(response) {
+  const contentType =
+    response.headers.get("content-type") || "";
+
+  if (contentType.includes("application/json")) {
+    return await response.json();
+  }
+
+  const text = await response.text();
+
+  return {
+    success: false,
+    message:
+      text ||
+      `Server returned HTTP ${response.status}`,
+  };
+}
+
+// ============================================================
 // APP
 // ============================================================
 
 function App() {
-  // ----------------------------------------------------------
+  // ==========================================================
   // SEARCH
-  // ----------------------------------------------------------
+  // ==========================================================
 
   const [query, setQuery] = useState("");
   const [answer, setAnswer] = useState("");
   const [serviceId, setServiceId] = useState("");
 
-  // ----------------------------------------------------------
+  // ==========================================================
   // LANGUAGE
-  // ----------------------------------------------------------
+  // ==========================================================
 
   const [language, setLanguage] = useState("en");
-  const [detectedLanguage, setDetectedLanguage] = useState("en");
+  const [detectedLanguage, setDetectedLanguage] =
+    useState("en");
 
-  // ----------------------------------------------------------
-  // STATES
-  // ----------------------------------------------------------
+  // ==========================================================
+  // UI STATES
+  // ==========================================================
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -62,9 +100,9 @@ function App() {
 
   const [voiceStatus, setVoiceStatus] = useState("");
 
-  // ----------------------------------------------------------
+  // ==========================================================
   // REFS
-  // ----------------------------------------------------------
+  // ==========================================================
 
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
@@ -72,7 +110,7 @@ function App() {
   const audioRef = useRef(null);
 
   // ==========================================================
-  // LANGUAGE DETECTION FROM TEXT
+  // LANGUAGE DETECTION
   // ==========================================================
 
   const detectLanguageFromText = (text) => {
@@ -80,17 +118,17 @@ function App() {
       return "en";
     }
 
-    // Telugu Unicode
+    // Telugu
     if (/[\u0C00-\u0C7F]/.test(text)) {
       return "te";
     }
 
-    // Hindi / Devanagari Unicode
+    // Hindi / Devanagari
     if (/[\u0900-\u097F]/.test(text)) {
       return "hi";
     }
 
-    // Urdu / Arabic Unicode
+    // Urdu / Arabic
     if (
       /[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF]/.test(
         text
@@ -103,18 +141,10 @@ function App() {
   };
 
   // ==========================================================
-  // HANDLE LANGUAGE CHANGE
+  // STOP AUDIO
   // ==========================================================
 
-  const handleLanguageChange = (event) => {
-    const selectedLanguage = event.target.value;
-
-    setLanguage(selectedLanguage);
-    setDetectedLanguage(selectedLanguage);
-    setError("");
-    setVoiceStatus("");
-
-    // Stop current TTS if language changes
+  const stopSpeaking = () => {
     if (audioRef.current) {
       try {
         audioRef.current.pause();
@@ -124,8 +154,26 @@ function App() {
       }
 
       audioRef.current = null;
-      setIsSpeaking(false);
     }
+
+    setIsSpeaking(false);
+    setVoiceStatus("");
+  };
+
+  // ==========================================================
+  // LANGUAGE CHANGE
+  // ==========================================================
+
+  const handleLanguageChange = (event) => {
+    const selectedLanguage = event.target.value;
+
+    setLanguage(selectedLanguage);
+    setDetectedLanguage(selectedLanguage);
+
+    setError("");
+    setVoiceStatus("");
+
+    stopSpeaking();
   };
 
   // ==========================================================
@@ -135,10 +183,6 @@ function App() {
   const startListening = async () => {
     setError("");
     setVoiceStatus("");
-
-    // --------------------------------------------------------
-    // Browser support
-    // --------------------------------------------------------
 
     if (!navigator.mediaDevices?.getUserMedia) {
       setError(
@@ -154,13 +198,12 @@ function App() {
       return;
     }
 
-    // --------------------------------------------------------
     // Stop existing recorder
-    // --------------------------------------------------------
-
     if (mediaRecorderRef.current) {
       try {
-        if (mediaRecorderRef.current.state !== "inactive") {
+        if (
+          mediaRecorderRef.current.state !== "inactive"
+        ) {
           mediaRecorderRef.current.stop();
         }
       } catch {
@@ -169,24 +212,25 @@ function App() {
     }
 
     try {
-      // ------------------------------------------------------
-      // Request microphone
-      // ------------------------------------------------------
+      // ======================================================
+      // MICROPHONE
+      // ======================================================
 
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true,
-        },
-      });
+      const stream =
+        await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true,
+          },
+        });
 
       streamRef.current = stream;
       audioChunksRef.current = [];
 
-      // ------------------------------------------------------
-      // Select supported MIME type
-      // ------------------------------------------------------
+      // ======================================================
+      // MIME TYPE
+      // ======================================================
 
       let mimeType = "";
 
@@ -209,38 +253,46 @@ function App() {
       }
 
       const recorder = mimeType
-        ? new MediaRecorder(stream, { mimeType })
+        ? new MediaRecorder(stream, {
+            mimeType,
+          })
         : new MediaRecorder(stream);
 
       mediaRecorderRef.current = recorder;
 
-      // ------------------------------------------------------
-      // Receive audio chunks
-      // ------------------------------------------------------
+      // ======================================================
+      // AUDIO DATA
+      // ======================================================
 
       recorder.ondataavailable = (event) => {
-        if (event.data && event.data.size > 0) {
-          audioChunksRef.current.push(event.data);
+        if (
+          event.data &&
+          event.data.size > 0
+        ) {
+          audioChunksRef.current.push(
+            event.data
+          );
         }
       };
 
-      // ------------------------------------------------------
-      // Recording started
-      // ------------------------------------------------------
+      // ======================================================
+      // START
+      // ======================================================
 
       recorder.onstart = () => {
         setIsListening(true);
 
         setVoiceStatus(
           `🎤 Listening in ${
-            LANGUAGES[language]?.name || "English"
+            LANGUAGES[language]?.name ||
+            "English"
           }... Speak now`
         );
       };
 
-      // ------------------------------------------------------
-      // Recording stopped
-      // ------------------------------------------------------
+      // ======================================================
+      // STOP
+      // ======================================================
 
       recorder.onstop = async () => {
         setIsListening(false);
@@ -258,7 +310,8 @@ function App() {
           streamRef.current = null;
         }
 
-        const chunks = audioChunksRef.current;
+        const chunks =
+          audioChunksRef.current;
 
         if (!chunks.length) {
           setVoiceStatus("");
@@ -271,18 +324,22 @@ function App() {
         }
 
         const blob = new Blob(chunks, {
-          type: mimeType || "audio/webm",
+          type:
+            mimeType || "audio/webm",
         });
 
         await sendAudioToSarvam(blob);
       };
 
-      // ------------------------------------------------------
-      // Recording error
-      // ------------------------------------------------------
+      // ======================================================
+      // RECORDER ERROR
+      // ======================================================
 
       recorder.onerror = (event) => {
-        console.error("MediaRecorder error:", event);
+        console.error(
+          "MediaRecorder error:",
+          event
+        );
 
         setIsListening(false);
         setVoiceStatus("");
@@ -300,27 +357,37 @@ function App() {
         }
       };
 
-      // ------------------------------------------------------
-      // Start recording
-      // ------------------------------------------------------
+      // ======================================================
+      // START RECORDING
+      // ======================================================
 
       recorder.start();
     } catch (err) {
-      console.error("Microphone error:", err);
+      console.error(
+        "Microphone error:",
+        err
+      );
 
       setIsListening(false);
       setVoiceStatus("");
 
-      if (err?.name === "NotAllowedError") {
+      if (
+        err?.name === "NotAllowedError"
+      ) {
         setError(
           "Microphone permission was denied. Please allow microphone access."
         );
-      } else if (err?.name === "NotFoundError") {
-        setError("No microphone was found.");
+      } else if (
+        err?.name === "NotFoundError"
+      ) {
+        setError(
+          "No microphone was found."
+        );
       } else {
         setError(
           `Unable to access microphone: ${
-            err?.message || "Unknown error"
+            err?.message ||
+            "Unknown error"
           }`
         );
       }
@@ -328,43 +395,39 @@ function App() {
   };
 
   // ==========================================================
-  // SEND AUDIO TO BACKEND STT
+  // SEND AUDIO TO BACKEND
   // ==========================================================
 
-  const sendAudioToSarvam = async (audioBlob) => {
+  const sendAudioToSarvam = async (
+    audioBlob
+  ) => {
     try {
-      // ------------------------------------------------------
-      // Determine extension
-      // ------------------------------------------------------
-
-      const extension = audioBlob.type.includes("ogg")
-        ? "ogg"
-        : "webm";
+      const extension =
+        audioBlob.type.includes("ogg")
+          ? "ogg"
+          : "webm";
 
       const audioFile = new File(
         [audioBlob],
         `speech.${extension}`,
         {
           type:
-            audioBlob.type || "audio/webm",
+            audioBlob.type ||
+            "audio/webm",
         }
       );
 
-      // ------------------------------------------------------
-      // Form data
-      // ------------------------------------------------------
-
       const formData = new FormData();
 
-      formData.append("file", audioFile);
+      formData.append(
+        "file",
+        audioFile
+      );
 
-      // IMPORTANT:
-      // Send selected language to backend
-      formData.append("language", language);
-
-      // ------------------------------------------------------
-      // Call backend
-      // ------------------------------------------------------
+      formData.append(
+        "language",
+        language
+      );
 
       const response = await fetch(
         `${API_BASE}/stt`,
@@ -374,25 +437,29 @@ function App() {
         }
       );
 
-      const data = await response.json();
+      const data =
+        await parseResponse(response);
+
+      console.log(
+        "STT response:",
+        data
+      );
 
       if (!response.ok) {
         throw new Error(
           data.detail ||
-            "Speech recognition failed."
+            data.message ||
+            `Backend returned ${response.status}`
         );
       }
 
       if (!data.success) {
         throw new Error(
           data.message ||
+            data.detail ||
             "Unable to recognize speech."
         );
       }
-
-      // ------------------------------------------------------
-      // Transcript
-      // ------------------------------------------------------
 
       const transcript =
         data.transcript ||
@@ -405,10 +472,6 @@ function App() {
         );
       }
 
-      // ------------------------------------------------------
-      // Language returned by backend
-      // ------------------------------------------------------
-
       const backendLanguage =
         data.detected_language ||
         data.language ||
@@ -419,37 +482,34 @@ function App() {
           ? backendLanguage
           : language;
 
-      // ------------------------------------------------------
-      // Update UI
-      // ------------------------------------------------------
-
       setQuery(transcript);
 
       setLanguage(finalLanguage);
-      setDetectedLanguage(finalLanguage);
+
+      setDetectedLanguage(
+        finalLanguage
+      );
 
       setVoiceStatus(
         `✅ ${
-          LANGUAGES[finalLanguage]?.name ||
-          "English"
+          LANGUAGES[finalLanguage]
+            ?.name || "English"
         } detected`
       );
 
-      console.log("Sarvam STT:", data);
-
-      // Clear status
       setTimeout(() => {
         setVoiceStatus("");
       }, 2500);
     } catch (err) {
       console.error(
-        "Sarvam STT error:",
+        "STT error:",
         err
       );
 
       setError(
         `Speech-to-text failed: ${
-          err?.message || "Unknown error"
+          err?.message ||
+          "Unknown error"
         }`
       );
 
@@ -464,7 +524,8 @@ function App() {
   const stopListening = () => {
     if (
       mediaRecorderRef.current &&
-      mediaRecorderRef.current.state !== "inactive"
+      mediaRecorderRef.current.state !==
+        "inactive"
     ) {
       try {
         mediaRecorderRef.current.stop();
@@ -494,16 +555,18 @@ function App() {
 
   const askService = async () => {
     if (!query.trim()) {
-      setError("Please enter a question.");
+      setError(
+        "Please enter a question."
+      );
       return;
     }
 
-    // Stop listening
+    // Stop microphone
     if (isListening) {
       stopListening();
     }
 
-    // Stop TTS
+    // Stop speech
     if (isSpeaking) {
       stopSpeaking();
     }
@@ -514,69 +577,88 @@ function App() {
     setError("");
     setVoiceStatus("");
 
-    // --------------------------------------------------------
-    // Detect typed language
-    // --------------------------------------------------------
+    // ======================================================
+    // DETECT LANGUAGE
+    // ======================================================
 
     const textLanguage =
       detectLanguageFromText(query);
 
-    // If text contains an Indian script, use it.
-    // Otherwise retain user's selected language.
     let requestLanguage = language;
 
+    // If Indian script detected,
+    // override selected language.
     if (textLanguage !== "en") {
-      requestLanguage = textLanguage;
+      requestLanguage =
+        textLanguage;
     }
 
-    setDetectedLanguage(requestLanguage);
+    setDetectedLanguage(
+      requestLanguage
+    );
 
     try {
-      // ------------------------------------------------------
-      // Backend URL
-      // ------------------------------------------------------
+      // ======================================================
+      // REQUEST PARAMETERS
+      // ======================================================
 
-      const params = new URLSearchParams();
+      const params =
+        new URLSearchParams();
 
-      params.append(
+      params.set(
         "q",
         query.trim()
       );
 
-      // IMPORTANT:
-      // Send language parameter to backend
-      params.append(
+      params.set(
         "language",
         requestLanguage
       );
 
-      const response = await fetch(
-        `${API_BASE}/ask?${params.toString()}`,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-          },
-        }
-      );
+      // ======================================================
+      // CALL BACKEND
+      // ======================================================
 
-      const data = await response.json();
+      const url =
+        `${API_BASE}/ask?${params.toString()}`;
 
       console.log(
-        "NagrikSeva /ask:",
+        "Calling API:",
+        url
+      );
+
+      const response =
+        await fetch(url, {
+          method: "GET",
+          headers: {
+            Accept:
+              "application/json",
+          },
+        });
+
+      const data =
+        await parseResponse(response);
+
+      console.log(
+        "NagrikSeva /ask response:",
         data
       );
+
+      // ======================================================
+      // HTTP ERROR
+      // ======================================================
 
       if (!response.ok) {
         throw new Error(
           data.detail ||
+            data.message ||
             `Backend returned ${response.status}`
         );
       }
 
-      // ------------------------------------------------------
-      // Backend language
-      // ------------------------------------------------------
+      // ======================================================
+      // LANGUAGE
+      // ======================================================
 
       const backendLanguage =
         data.detected_language ||
@@ -588,12 +670,17 @@ function App() {
           ? backendLanguage
           : requestLanguage;
 
-      setLanguage(finalLanguage);
-      setDetectedLanguage(finalLanguage);
+      setLanguage(
+        finalLanguage
+      );
 
-      // ------------------------------------------------------
-      // Result
-      // ------------------------------------------------------
+      setDetectedLanguage(
+        finalLanguage
+      );
+
+      // ======================================================
+      // SUCCESS
+      // ======================================================
 
       if (data.success) {
         setAnswer(
@@ -603,12 +690,37 @@ function App() {
         setServiceId(
           data.service_id || ""
         );
-      } else {
-        setAnswer(
-          data.message ||
-            "Service information not found."
-        );
+
+        // If backend says success but
+        // no answer was returned.
+        if (
+          !data.answer?.trim()
+        ) {
+          setError(
+            "The backend returned success but no answer."
+          );
+        }
+
+        return;
       }
+
+      // ======================================================
+      // APPLICATION-LEVEL FAILURE
+      // ======================================================
+
+      // IMPORTANT:
+      // This is NOT a connection error.
+      // Backend is reachable but couldn't
+      // find the requested service.
+
+      setAnswer(
+        data.message ||
+          "Service information was not found."
+      );
+
+      setServiceId(
+        data.service_id || ""
+      );
     } catch (err) {
       console.error(
         "NagrikSeva API error:",
@@ -617,7 +729,8 @@ function App() {
 
       setError(
         `Unable to connect to backend: ${
-          err?.message || "Unknown error"
+          err?.message ||
+          "Unknown error"
         }`
       );
     } finally {
@@ -626,24 +739,30 @@ function App() {
   };
 
   // ==========================================================
-  // TEXTAREA CHANGE
+  // QUERY CHANGE
   // ==========================================================
 
-  const handleQueryChange = (event) => {
-    const value = event.target.value;
+  const handleQueryChange = (
+    event
+  ) => {
+    const value =
+      event.target.value;
 
     setQuery(value);
+
     setError("");
 
     if (value.trim()) {
       const detected =
-        detectLanguageFromText(value);
+        detectLanguageFromText(
+          value
+        );
 
-      // Only automatically change language
-      // when an Indian script is detected.
       if (detected !== "en") {
         setLanguage(detected);
-        setDetectedLanguage(detected);
+        setDetectedLanguage(
+          detected
+        );
       }
     }
   };
@@ -652,7 +771,9 @@ function App() {
   // ENTER KEY
   // ==========================================================
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (
+    event
+  ) => {
     if (
       event.key === "Enter" &&
       !event.shiftKey
@@ -676,53 +797,44 @@ function App() {
 
     setError("");
 
-    // --------------------------------------------------------
-    // Stop previous audio
-    // --------------------------------------------------------
-
-    if (audioRef.current) {
-      try {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      } catch {
-        // Ignore
-      }
-
-      audioRef.current = null;
-    }
+    stopSpeaking();
 
     setIsSpeaking(true);
 
     const speechLanguage =
-      detectedLanguage || language || "en";
+      detectedLanguage ||
+      language ||
+      "en";
 
     setVoiceStatus(
       `🔊 Generating ${
-        LANGUAGES[speechLanguage]?.name ||
-        "English"
+        LANGUAGES[speechLanguage]
+          ?.name || "English"
       } speech...`
     );
 
     try {
-      // ------------------------------------------------------
-      // Call TTS backend
-      // ------------------------------------------------------
+      const response =
+        await fetch(
+          `${API_BASE}/tts`,
+          {
+            method: "POST",
 
-      const response = await fetch(
-        `${API_BASE}/tts`,
-        {
-          method: "POST",
+            headers: {
+              "Content-Type":
+                "application/json",
 
-          headers: {
-            "Content-Type": "application/json",
-          },
+              Accept:
+                "audio/*",
+            },
 
-          body: JSON.stringify({
-            text: answer,
-            language: speechLanguage,
-          }),
-        }
-      );
+            body: JSON.stringify({
+              text: answer,
+              language:
+                speechLanguage,
+            }),
+          }
+        );
 
       if (!response.ok) {
         let message =
@@ -730,21 +842,22 @@ function App() {
 
         try {
           const data =
-            await response.json();
+            await parseResponse(
+              response
+            );
 
-          if (data.detail) {
-            message = data.detail;
-          }
+          message =
+            data.detail ||
+            data.message ||
+            message;
         } catch {
           // Ignore
         }
 
-        throw new Error(message);
+        throw new Error(
+          message
+        );
       }
-
-      // ------------------------------------------------------
-      // Get audio
-      // ------------------------------------------------------
 
       const audioBlob =
         await response.blob();
@@ -754,10 +867,6 @@ function App() {
           "TTS returned empty audio."
         );
       }
-
-      // ------------------------------------------------------
-      // Create audio URL
-      // ------------------------------------------------------
 
       const audioUrl =
         URL.createObjectURL(
@@ -769,24 +878,18 @@ function App() {
 
       audioRef.current = audio;
 
-      // ------------------------------------------------------
-      // Audio started
-      // ------------------------------------------------------
-
       audio.onplay = () => {
         setIsSpeaking(true);
 
         setVoiceStatus(
           `🔊 Speaking in ${
-            LANGUAGES[speechLanguage]?.name ||
+            LANGUAGES[
+              speechLanguage
+            ]?.name ||
             "English"
           }`
         );
       };
-
-      // ------------------------------------------------------
-      // Audio ended
-      // ------------------------------------------------------
 
       audio.onended = () => {
         setIsSpeaking(false);
@@ -798,10 +901,6 @@ function App() {
 
         audioRef.current = null;
       };
-
-      // ------------------------------------------------------
-      // Audio error
-      // ------------------------------------------------------
 
       audio.onerror = () => {
         setIsSpeaking(false);
@@ -818,10 +917,6 @@ function App() {
         );
       };
 
-      // ------------------------------------------------------
-      // Play
-      // ------------------------------------------------------
-
       await audio.play();
     } catch (err) {
       console.error(
@@ -834,30 +929,11 @@ function App() {
 
       setError(
         `Text-to-speech failed: ${
-          err?.message || "Unknown error"
+          err?.message ||
+          "Unknown error"
         }`
       );
     }
-  };
-
-  // ==========================================================
-  // STOP SPEAKING
-  // ==========================================================
-
-  const stopSpeaking = () => {
-    if (audioRef.current) {
-      try {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      } catch {
-        // Ignore
-      }
-
-      audioRef.current = null;
-    }
-
-    setIsSpeaking(false);
-    setVoiceStatus("");
   };
 
   // ==========================================================
@@ -867,11 +943,13 @@ function App() {
   useEffect(() => {
     return () => {
       // Stop recorder
-      if (mediaRecorderRef.current) {
+      if (
+        mediaRecorderRef.current
+      ) {
         try {
           if (
-            mediaRecorderRef.current.state !==
-            "inactive"
+            mediaRecorderRef.current
+              .state !== "inactive"
           ) {
             mediaRecorderRef.current.stop();
           }
@@ -905,10 +983,12 @@ function App() {
   // ==========================================================
 
   const currentLanguageName =
-    LANGUAGES[detectedLanguage]?.name ||
-    "English";
+    LANGUAGES[
+      detectedLanguage
+    ]?.name || "English";
 
-  const isRTL = detectedLanguage === "ur";
+  const isRTL =
+    detectedLanguage === "ur";
 
   // ==========================================================
   // UI
@@ -916,12 +996,16 @@ function App() {
 
   return (
     <div
-      className={`app ${isRTL ? "rtl" : ""}`}
-      dir={isRTL ? "rtl" : "ltr"}
+      className={`app ${
+        isRTL ? "rtl" : ""
+      }`}
+      dir={
+        isRTL ? "rtl" : "ltr"
+      }
     >
-      {/* =====================================================
+      {/* ====================================================
           HEADER
-      ====================================================== */}
+      ===================================================== */}
 
       <header className="header">
         <div className="brand">
@@ -933,10 +1017,13 @@ function App() {
           </div>
 
           <div>
-            <h1>NagrikSeva</h1>
+            <h1>
+              NagrikSeva
+            </h1>
 
             <p>
-              AI Government Service Assistant
+              AI Government
+              Service Assistant
             </p>
           </div>
         </div>
@@ -949,15 +1036,15 @@ function App() {
         </div>
       </header>
 
-      {/* =====================================================
+      {/* ====================================================
           MAIN
-      ====================================================== */}
+      ===================================================== */}
 
       <main className="container">
 
-        {/* ===================================================
+        {/* ==================================================
             HERO
-        ==================================================== */}
+        =================================================== */}
 
         <section className="hero">
           <div
@@ -972,15 +1059,16 @@ function App() {
           </h2>
 
           <p>
-            Ask about Indian government
-            services in English, Telugu,
+            Ask about Indian
+            government services
+            in English, Telugu,
             Hindi or Urdu.
           </p>
         </section>
 
-        {/* ===================================================
+        {/* ==================================================
             SEARCH CARD
-        ==================================================== */}
+        =================================================== */}
 
         <section className="search-card">
 
@@ -988,23 +1076,32 @@ function App() {
             htmlFor="service-query"
             className="input-label"
           >
-            Ask about a government service
+            Ask about a government
+            service
           </label>
 
-          {/* -------------------------------------------------
-              TEXTAREA
-          -------------------------------------------------- */}
+          {/* TEXTAREA */}
 
           <textarea
             id="service-query"
             value={query}
-            onChange={handleQueryChange}
-            onKeyDown={handleKeyDown}
+            onChange={
+              handleQueryChange
+            }
+            onKeyDown={
+              handleKeyDown
+            }
             placeholder="Example: I need an income certificate"
             rows={4}
             disabled={loading}
-            lang={detectedLanguage}
-            dir={isRTL ? "rtl" : "ltr"}
+            lang={
+              detectedLanguage
+            }
+            dir={
+              isRTL
+                ? "rtl"
+                : "ltr"
+            }
             aria-describedby="query-help"
           />
 
@@ -1012,13 +1109,14 @@ function App() {
             id="query-help"
             className="query-help"
           >
-            Type your question or use the
-            microphone. Press Enter to search.
+            Type your question or
+            use the microphone.
+            Press Enter to search.
           </p>
 
-          {/* =================================================
+          {/* ==================================================
               LANGUAGE SELECTOR
-          ================================================== */}
+          =================================================== */}
 
           <div className="voice-language-selector">
 
@@ -1029,8 +1127,13 @@ function App() {
             <select
               id="language-select"
               value={language}
-              onChange={handleLanguageChange}
-              disabled={loading || isListening}
+              onChange={
+                handleLanguageChange
+              }
+              disabled={
+                loading ||
+                isListening
+              }
             >
               <option value="en">
                 English
@@ -1050,25 +1153,33 @@ function App() {
             </select>
 
             <span>
-              {LANGUAGES[language]?.name ||
+              {LANGUAGES[
+                language
+              ]?.name ||
                 "English"}
             </span>
           </div>
 
-          {/* =================================================
-              VOICE + SEARCH
-          ================================================== */}
+          {/* ==================================================
+              BUTTONS
+          =================================================== */}
 
           <div className="voice-controls">
 
             <button
               type="button"
               className={`voice-button ${
-                isListening ? "active" : ""
+                isListening
+                  ? "active"
+                  : ""
               }`}
-              onClick={toggleListening}
+              onClick={
+                toggleListening
+              }
               disabled={loading}
-              aria-pressed={isListening}
+              aria-pressed={
+                isListening
+              }
             >
               {isListening
                 ? "⏹ Stop Listening"
@@ -1078,7 +1189,9 @@ function App() {
             <button
               type="button"
               className="ask-button"
-              onClick={askService}
+              onClick={
+                askService
+              }
               disabled={
                 loading ||
                 !query.trim()
@@ -1090,9 +1203,7 @@ function App() {
             </button>
           </div>
 
-          {/* =================================================
-              VOICE STATUS
-          ================================================== */}
+          {/* VOICE STATUS */}
 
           <div
             className="voice-status"
@@ -1103,9 +1214,9 @@ function App() {
           </div>
         </section>
 
-        {/* ===================================================
+        {/* ==================================================
             ERROR
-        ==================================================== */}
+        =================================================== */}
 
         {error && (
           <div
@@ -1116,9 +1227,9 @@ function App() {
           </div>
         )}
 
-        {/* ===================================================
+        {/* ==================================================
             RESULT
-        ==================================================== */}
+        =================================================== */}
 
         {answer && (
           <section
@@ -1126,21 +1237,21 @@ function App() {
             aria-labelledby="result-title"
           >
 
-            {/* -----------------------------------------------
-                RESULT HEADER
-            ------------------------------------------------ */}
-
             <div className="result-header">
 
               <div>
                 <p className="result-label">
-                  Government Service Information
+                  Government Service
+                  Information
                 </p>
 
                 <h2 id="result-title">
                   {serviceId
                     ? serviceId
-                        .replaceAll("_", " ")
+                        .replaceAll(
+                          "_",
+                          " "
+                        )
                         .replace(
                           /\b\w/g,
                           (char) =>
@@ -1153,24 +1264,25 @@ function App() {
               <span className="language-badge">
                 {currentLanguageName}
               </span>
-
             </div>
 
-            {/* -----------------------------------------------
-                ANSWER
-            ------------------------------------------------ */}
+            {/* ANSWER */}
 
             <div
               className="answer"
-              lang={detectedLanguage}
-              dir={isRTL ? "rtl" : "ltr"}
+              lang={
+                detectedLanguage
+              }
+              dir={
+                isRTL
+                  ? "rtl"
+                  : "ltr"
+              }
             >
               {answer}
             </div>
 
-            {/* -----------------------------------------------
-                TTS
-            ------------------------------------------------ */}
+            {/* TTS */}
 
             <div className="result-actions">
 
@@ -1178,16 +1290,22 @@ function App() {
                 <button
                   type="button"
                   className="listen-button"
-                  onClick={speakAnswer}
+                  onClick={
+                    speakAnswer
+                  }
                 >
                   🔊 Listen in{" "}
-                  {currentLanguageName}
+                  {
+                    currentLanguageName
+                  }
                 </button>
               ) : (
                 <button
                   type="button"
                   className="listen-button stop-speaking"
-                  onClick={stopSpeaking}
+                  onClick={
+                    stopSpeaking
+                  }
                 >
                   ⏹ Stop Speaking
                 </button>
@@ -1198,13 +1316,14 @@ function App() {
         )}
       </main>
 
-      {/* =====================================================
+      {/* ====================================================
           FOOTER
-      ====================================================== */}
+      ===================================================== */}
 
       <footer>
-        🇮🇳 NagrikSeva • Multilingual AI
-        Government Service Assistant
+        🇮🇳 NagrikSeva •
+        Multilingual AI Government
+        Service Assistant
       </footer>
     </div>
   );
