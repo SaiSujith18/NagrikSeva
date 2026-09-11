@@ -1216,7 +1216,7 @@ function App() {
           </h2>
 
           <p>
-            Ask about Indian
+            Ask about TS
             government services
             in English, Telugu,
             Hindi or Urdu.
