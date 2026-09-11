@@ -4,16 +4,6 @@ import "./App.css";
 // ============================================================
 // API CONFIGURATION
 // ============================================================
-// Production on Vercel:
-// Browser calls /api/... and vercel.json proxies it to backend.
-//
-// Local development:
-// Calls localhost:8000 directly.
-//
-// IMPORTANT:
-// Do NOT put http://65.0.107.41:8000 directly in frontend
-// when the frontend is hosted on HTTPS.
-// ============================================================
 
 const API_BASE =
   import.meta.env.VITE_API_BASE_URL ||
@@ -65,6 +55,108 @@ async function parseResponse(response) {
       text ||
       `Server returned HTTP ${response.status}`,
   };
+}
+
+// ============================================================
+// HELPER - RENDER ANSWER
+// ============================================================
+// Converts:
+//   https://example.com
+// into a clickable link.
+//
+// Also converts:
+//   **Application URL**
+// into bold text.
+//
+// Works for ALL government service responses.
+// ============================================================
+
+function renderAnswer(text) {
+  if (!text) {
+    return null;
+  }
+
+  // URL detection
+  const urlRegex =
+    /(https?:\/\/[^\s<>"'`)\]}]+)/g;
+
+  // Split answer into URLs and normal text
+  const parts = text.split(urlRegex);
+
+  return parts.map((part, index) => {
+    // ========================================================
+    // URL
+    // ========================================================
+
+    if (
+      part.startsWith("http://") ||
+      part.startsWith("https://")
+    ) {
+      // Remove punctuation accidentally attached
+      // to the end of the URL.
+      let url = part;
+      let trailing = "";
+
+      const match = url.match(/[.,!?;:]+$/);
+
+      if (match) {
+        trailing = match[0];
+        url = url.slice(
+          0,
+          -trailing.length
+        );
+      }
+
+      return (
+        <span key={index}>
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="answer-link"
+          >
+            {url}
+          </a>
+          {trailing}
+        </span>
+      );
+    }
+
+    // ========================================================
+    // NORMAL TEXT + MARKDOWN BOLD
+    // ========================================================
+
+    const boldParts =
+      part.split(/(\*\*[^*]+\*\*)/g);
+
+    return (
+      <span key={index}>
+        {boldParts.map(
+          (boldPart, boldIndex) => {
+            if (
+              boldPart.startsWith("**") &&
+              boldPart.endsWith("**")
+            ) {
+              return (
+                <strong key={boldIndex}>
+                  {boldPart.slice(
+                    2,
+                    -2
+                  )}
+                </strong>
+              );
+            }
+
+            return (
+              <span key={boldIndex}>
+                {boldPart}
+              </span>
+            );
+          }
+        )}
+      </span>
+    );
+  });
 }
 
 // ============================================================
@@ -165,10 +257,13 @@ function App() {
   // ==========================================================
 
   const handleLanguageChange = (event) => {
-    const selectedLanguage = event.target.value;
+    const selectedLanguage =
+      event.target.value;
 
     setLanguage(selectedLanguage);
-    setDetectedLanguage(selectedLanguage);
+    setDetectedLanguage(
+      selectedLanguage
+    );
 
     setError("");
     setVoiceStatus("");
@@ -184,7 +279,9 @@ function App() {
     setError("");
     setVoiceStatus("");
 
-    if (!navigator.mediaDevices?.getUserMedia) {
+    if (
+      !navigator.mediaDevices?.getUserMedia
+    ) {
       setError(
         "Microphone recording is not supported in this browser."
       );
@@ -202,7 +299,8 @@ function App() {
     if (mediaRecorderRef.current) {
       try {
         if (
-          mediaRecorderRef.current.state !== "inactive"
+          mediaRecorderRef.current.state !==
+          "inactive"
         ) {
           mediaRecorderRef.current.stop();
         }
@@ -217,13 +315,15 @@ function App() {
       // ======================================================
 
       const stream =
-        await navigator.mediaDevices.getUserMedia({
-          audio: {
-            echoCancellation: true,
-            noiseSuppression: true,
-            autoGainControl: true,
-          },
-        });
+        await navigator.mediaDevices.getUserMedia(
+          {
+            audio: {
+              echoCancellation: true,
+              noiseSuppression: true,
+              autoGainControl: true,
+            },
+          }
+        );
 
       streamRef.current = stream;
       audioChunksRef.current = [];
@@ -239,9 +339,12 @@ function App() {
           "audio/webm;codecs=opus"
         )
       ) {
-        mimeType = "audio/webm;codecs=opus";
+        mimeType =
+          "audio/webm;codecs=opus";
       } else if (
-        MediaRecorder.isTypeSupported("audio/webm")
+        MediaRecorder.isTypeSupported(
+          "audio/webm"
+        )
       ) {
         mimeType = "audio/webm";
       } else if (
@@ -249,7 +352,8 @@ function App() {
           "audio/ogg;codecs=opus"
         )
       ) {
-        mimeType = "audio/ogg;codecs=opus";
+        mimeType =
+          "audio/ogg;codecs=opus";
       }
 
       const recorder = mimeType
@@ -258,13 +362,16 @@ function App() {
           })
         : new MediaRecorder(stream);
 
-      mediaRecorderRef.current = recorder;
+      mediaRecorderRef.current =
+        recorder;
 
       // ======================================================
       // AUDIO DATA
       // ======================================================
 
-      recorder.ondataavailable = (event) => {
+      recorder.ondataavailable = (
+        event
+      ) => {
         if (
           event.data &&
           event.data.size > 0
@@ -305,7 +412,9 @@ function App() {
         if (streamRef.current) {
           streamRef.current
             .getTracks()
-            .forEach((track) => track.stop());
+            .forEach((track) =>
+              track.stop()
+            );
 
           streamRef.current = null;
         }
@@ -323,10 +432,14 @@ function App() {
           return;
         }
 
-        const blob = new Blob(chunks, {
-          type:
-            mimeType || "audio/webm",
-        });
+        const blob = new Blob(
+          chunks,
+          {
+            type:
+              mimeType ||
+              "audio/webm",
+          }
+        );
 
         await sendAudioToSarvam(blob);
       };
@@ -351,7 +464,9 @@ function App() {
         if (streamRef.current) {
           streamRef.current
             .getTracks()
-            .forEach((track) => track.stop());
+            .forEach((track) =>
+              track.stop()
+            );
 
           streamRef.current = null;
         }
@@ -372,13 +487,15 @@ function App() {
       setVoiceStatus("");
 
       if (
-        err?.name === "NotAllowedError"
+        err?.name ===
+        "NotAllowedError"
       ) {
         setError(
           "Microphone permission was denied. Please allow microphone access."
         );
       } else if (
-        err?.name === "NotFoundError"
+        err?.name ===
+        "NotFoundError"
       ) {
         setError(
           "No microphone was found."
@@ -417,7 +534,8 @@ function App() {
         }
       );
 
-      const formData = new FormData();
+      const formData =
+        new FormData();
 
       formData.append(
         "file",
@@ -438,7 +556,9 @@ function App() {
       );
 
       const data =
-        await parseResponse(response);
+        await parseResponse(
+          response
+        );
 
       console.log(
         "STT response:",
@@ -584,10 +704,9 @@ function App() {
     const textLanguage =
       detectLanguageFromText(query);
 
-    let requestLanguage = language;
+    let requestLanguage =
+      language;
 
-    // If Indian script detected,
-    // override selected language.
     if (textLanguage !== "en") {
       requestLanguage =
         textLanguage;
@@ -637,7 +756,9 @@ function App() {
         });
 
       const data =
-        await parseResponse(response);
+        await parseResponse(
+          response
+        );
 
       console.log(
         "NagrikSeva /ask response:",
@@ -691,8 +812,6 @@ function App() {
           data.service_id || ""
         );
 
-        // If backend says success but
-        // no answer was returned.
         if (
           !data.answer?.trim()
         ) {
@@ -707,11 +826,6 @@ function App() {
       // ======================================================
       // APPLICATION-LEVEL FAILURE
       // ======================================================
-
-      // IMPORTANT:
-      // This is NOT a connection error.
-      // Backend is reachable but couldn't
-      // find the requested service.
 
       setAnswer(
         data.message ||
@@ -824,8 +938,7 @@ function App() {
               "Content-Type":
                 "application/json",
 
-              Accept:
-                "audio/*",
+              Accept: "audio/*",
             },
 
             body: JSON.stringify({
@@ -1266,7 +1379,9 @@ function App() {
               </span>
             </div>
 
-            {/* ANSWER */}
+            {/* ==================================================
+                ANSWER
+            =================================================== */}
 
             <div
               className="answer"
@@ -1279,10 +1394,12 @@ function App() {
                   : "ltr"
               }
             >
-              {answer}
+              {renderAnswer(answer)}
             </div>
 
-            {/* TTS */}
+            {/* ==================================================
+                TTS
+            =================================================== */}
 
             <div className="result-actions">
 
