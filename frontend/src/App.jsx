@@ -52,63 +52,135 @@ async function parseResponse(response) {
   return {
     success: false,
     message:
-      text ||
-      `Server returned HTTP ${response.status}`,
+      text || `Server returned HTTP ${response.status}`,
   };
 }
 
 // ============================================================
-// HELPER - RENDER ANSWER
-// ============================================================
-// Converts:
-//   https://example.com
-// into a clickable link.
-//
-// Also converts:
-//   **Application URL**
-// into bold text.
-//
-// Works for ALL government service responses.
+// HELPER - REMOVE URL TRAILING PUNCTUATION
 // ============================================================
 
-function renderAnswer(text) {
+function cleanUrl(rawUrl) {
+  let url = rawUrl;
+  let trailing = "";
+
+  while (
+    url.length > 0 &&
+    /[.,!?;:]+$/.test(url)
+  ) {
+    trailing += url[url.length - 1];
+    url = url.slice(0, -1);
+  }
+
+  return {
+    url,
+    trailing,
+  };
+}
+
+// ============================================================
+// HELPER - RENDER CLICKABLE LINKS
+// ============================================================
+//
+// Supports:
+//
+// 1. Plain URL
+//    https://example.com
+//
+// 2. Markdown URL
+//    [Apply Here](https://example.com)
+//
+// 3. Bold text
+//    **Application URL:**
+//
+// 4. URLs followed by punctuation
+//    https://example.com.
+// ============================================================
+
+function renderInlineText(text, keyPrefix = "") {
   if (!text) {
     return null;
   }
 
-  // URL detection
-  const urlRegex =
-    /(https?:\/\/[^\s<>"'`)\]}]+)/g;
+  const tokenRegex =
+    /(\[[^\]]+\]\(https?:\/\/[^)\s]+\)|https?:\/\/[^\s<>"'`)\]}]+|\*\*[^*]+\*\*)/g;
 
-  // Split answer into URLs and normal text
-  const parts = text.split(urlRegex);
+  const parts = [];
+  let lastIndex = 0;
+  let match;
 
-  return parts.map((part, index) => {
+  while ((match = tokenRegex.exec(text)) !== null) {
+    // Normal text before token
+    if (match.index > lastIndex) {
+      parts.push(
+        <span key={`${keyPrefix}-text-${lastIndex}`}>
+          {text.slice(lastIndex, match.index)}
+        </span>
+      );
+    }
+
+    const token = match[0];
+
     // ========================================================
-    // URL
+    // MARKDOWN LINK
     // ========================================================
 
     if (
-      part.startsWith("http://") ||
-      part.startsWith("https://")
+      token.startsWith("[") &&
+      token.includes("](") &&
+      token.endsWith(")")
     ) {
-      // Remove punctuation accidentally attached
-      // to the end of the URL.
-      let url = part;
-      let trailing = "";
-
-      const match = url.match(/[.,!?;:]+$/);
-
-      if (match) {
-        trailing = match[0];
-        url = url.slice(
-          0,
-          -trailing.length
+      const markdownMatch =
+        token.match(
+          /^\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)$/
         );
-      }
 
-      return (
-        <span key={index}>
+      if (markdownMatch) {
+        const linkText = markdownMatch[1];
+        const rawUrl = markdownMatch[2];
+
+        const { url, trailing } =
+          cleanUrl(rawUrl);
+
+        parts.push(
+          <span
+            key={`${keyPrefix}-link-${match.index}`}
+          >
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="answer-link"
+            >
+              {linkText}
+            </a>
+
+            {trailing}
+          </span>
+        );
+
+        lastIndex =
+          match.index + token.length;
+
+        continue;
+      }
+    }
+
+    // ========================================================
+    // PLAIN URL
+    // ========================================================
+
+    if (
+      token.startsWith("http://") ||
+      token.startsWith("https://")
+    ) {
+      const { url, trailing } =
+        cleanUrl(token);
+
+      parts.push(
+        <span
+          key={`${keyPrefix}-url-${match.index}`}
+        >
           <a
             href={url}
             target="_blank"
@@ -117,46 +189,88 @@ function renderAnswer(text) {
           >
             {url}
           </a>
+
           {trailing}
         </span>
       );
+
+      lastIndex =
+        match.index + token.length;
+
+      continue;
     }
 
     // ========================================================
-    // NORMAL TEXT + MARKDOWN BOLD
+    // BOLD TEXT
     // ========================================================
 
-    const boldParts =
-      part.split(/(\*\*[^*]+\*\*)/g);
+    if (
+      token.startsWith("**") &&
+      token.endsWith("**")
+    ) {
+      parts.push(
+        <strong
+          key={`${keyPrefix}-bold-${match.index}`}
+        >
+          {token.slice(2, -2)}
+        </strong>
+      );
 
-    return (
-      <span key={index}>
-        {boldParts.map(
-          (boldPart, boldIndex) => {
-            if (
-              boldPart.startsWith("**") &&
-              boldPart.endsWith("**")
-            ) {
-              return (
-                <strong key={boldIndex}>
-                  {boldPart.slice(
-                    2,
-                    -2
-                  )}
-                </strong>
-              );
-            }
+      lastIndex =
+        match.index + token.length;
 
-            return (
-              <span key={boldIndex}>
-                {boldPart}
-              </span>
-            );
-          }
-        )}
+      continue;
+    }
+
+    // Fallback
+    parts.push(
+      <span
+        key={`${keyPrefix}-fallback-${match.index}`}
+      >
+        {token}
       </span>
     );
-  });
+
+    lastIndex =
+      match.index + token.length;
+  }
+
+  // Remaining text
+  if (lastIndex < text.length) {
+    parts.push(
+      <span
+        key={`${keyPrefix}-remaining`}
+      >
+        {text.slice(lastIndex)}
+      </span>
+    );
+  }
+
+  return parts;
+}
+
+// ============================================================
+// HELPER - RENDER COMPLETE ANSWER
+// ============================================================
+//
+// Keeps line breaks while converting every URL into
+// a clickable link.
+// ============================================================
+
+function renderAnswer(text) {
+  if (!text) {
+    return null;
+  }
+
+  const lines = String(text).split(/\r?\n/);
+
+  return lines.map((line, index) => (
+    <span key={`line-${index}`}>
+      {renderInlineText(line, `line-${index}`)}
+
+      {index < lines.length - 1 && <br />}
+    </span>
+  ));
 }
 
 // ============================================================
@@ -187,19 +301,30 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const [isListening, setIsListening] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isListening, setIsListening] =
+    useState(false);
 
-  const [voiceStatus, setVoiceStatus] = useState("");
+  const [isSpeaking, setIsSpeaking] =
+    useState(false);
+
+  const [voiceStatus, setVoiceStatus] =
+    useState("");
 
   // ==========================================================
   // REFS
   // ==========================================================
 
-  const mediaRecorderRef = useRef(null);
-  const audioChunksRef = useRef([]);
-  const streamRef = useRef(null);
-  const audioRef = useRef(null);
+  const mediaRecorderRef =
+    useRef(null);
+
+  const audioChunksRef =
+    useRef([]);
+
+  const streamRef =
+    useRef(null);
+
+  const audioRef =
+    useRef(null);
 
   // ==========================================================
   // LANGUAGE DETECTION
@@ -604,7 +729,9 @@ function App() {
 
       setQuery(transcript);
 
-      setLanguage(finalLanguage);
+      setLanguage(
+        finalLanguage
+      );
 
       setDetectedLanguage(
         finalLanguage
@@ -874,6 +1001,7 @@ function App() {
 
       if (detected !== "en") {
         setLanguage(detected);
+
         setDetectedLanguage(
           detected
         );

@@ -1378,3 +1378,15 @@ footer {
 .answer strong {
   font-weight: 700;
 }
+
+.answer-link {
+  color: #2563eb;
+  text-decoration: underline;
+  font-weight: 600;
+  cursor: pointer;
+  word-break: break-word;
+}
+
+.answer-link:hover {
+  opacity: 0.8;
+}
