@@ -1,10 +1,5 @@
 /* ============================================================
-   NAGRIKSEVA - APP.CSS
-   Glassmorphism Multilingual Government Service Assistant
-============================================================ */
-
-/* ============================================================
-   RESET
+   GLOBAL RESET
 ============================================================ */
 
 * {
@@ -13,6 +8,13 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
 }
 
 body {
@@ -33,18 +35,18 @@ body {
 
   background:
     radial-gradient(
-      circle at 10% 10%,
-      rgb(59 130 246 / 14%),
+      circle at 8% 10%,
+      rgb(59 130 246 / 16%),
       transparent 30%
     ),
     radial-gradient(
-      circle at 90% 15%,
-      rgb(99 102 241 / 12%),
+      circle at 92% 12%,
+      rgb(99 102 241 / 14%),
       transparent 30%
     ),
     radial-gradient(
       circle at 50% 90%,
-      rgb(14 165 233 / 10%),
+      rgb(14 165 233 / 12%),
       transparent 35%
     ),
     linear-gradient(
@@ -78,6 +80,7 @@ button:disabled {
 ============================================================ */
 
 .app {
+  width: 100%;
   min-height: 100vh;
 
   display: flex;
@@ -99,30 +102,30 @@ button:disabled {
 
   position: fixed;
 
-  width: 260px;
-  height: 260px;
+  width: 320px;
+  height: 320px;
 
   border-radius: 50%;
 
   pointer-events: none;
 
-  filter: blur(70px);
+  filter: blur(90px);
 
   z-index: -1;
 }
 
 .app::before {
-  top: 120px;
-  left: -100px;
+  top: 100px;
+  left: -140px;
 
-  background: rgb(59 130 246 / 12%);
+  background: rgb(59 130 246 / 14%);
 }
 
 .app::after {
-  right: -100px;
-  bottom: 100px;
+  right: -140px;
+  bottom: 80px;
 
-  background: rgb(139 92 246 / 12%);
+  background: rgb(139 92 246 / 14%);
 }
 
 
@@ -135,17 +138,19 @@ button:disabled {
 
   min-height: 78px;
 
-  padding: 14px 7%;
+  padding:
+    14px
+    clamp(20px, 5vw, 90px);
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  gap: 20px;
+  gap: 24px;
 
-  background: rgb(255 255 255 / 65%);
+  background: rgb(255 255 255 / 72%);
 
-  border-bottom: 1px solid rgb(255 255 255 / 75%);
+  border-bottom: 1px solid rgb(255 255 255 / 80%);
 
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
@@ -169,11 +174,15 @@ button:disabled {
   align-items: center;
 
   gap: 13px;
+
+  min-width: 0;
 }
 
 .flag {
   width: 44px;
   height: 44px;
+
+  flex-shrink: 0;
 
   display: flex;
   align-items: center;
@@ -183,9 +192,9 @@ button:disabled {
 
   border-radius: 13px;
 
-  background: rgb(255 255 255 / 70%);
+  background: rgb(255 255 255 / 75%);
 
-  border: 1px solid rgb(255 255 255 / 80%);
+  border: 1px solid rgb(255 255 255 / 85%);
 
   box-shadow:
     0 6px 18px rgb(15 23 42 / 7%);
@@ -217,7 +226,7 @@ button:disabled {
 
 
 /* ============================================================
-   HEADER LANGUAGE INDICATOR
+   HEADER LANGUAGE
 ============================================================ */
 
 .language-indicator {
@@ -227,25 +236,24 @@ button:disabled {
   justify-content: center;
 
   min-width: 88px;
+  min-height: 36px;
 
-  min-height: 34px;
-
-  padding: 7px 14px;
+  padding: 7px 15px;
 
   border-radius: 999px;
 
   background:
     linear-gradient(
       135deg,
-      rgb(239 246 255 / 85%),
-      rgb(224 231 255 / 75%)
+      rgb(239 246 255 / 90%),
+      rgb(224 231 255 / 80%)
     );
 
-  border: 1px solid rgb(255 255 255 / 80%);
+  border: 1px solid rgb(255 255 255 / 85%);
 
   color: #1d4ed8;
 
-  font-size: 12px;
+  font-size: 13px;
 
   font-weight: 700;
 
@@ -261,16 +269,20 @@ button:disabled {
 
 /* ============================================================
    MAIN CONTAINER
+   LARGE DESKTOP FRIENDLY
 ============================================================ */
 
 .container {
-  width: min(900px, 92%);
+  width: min(1180px, calc(100% - 48px));
 
   margin: 0 auto;
 
   flex: 1;
 
-  padding: 58px 0 70px;
+  padding:
+    clamp(55px, 7vw, 95px)
+    0
+    80px;
 }
 
 
@@ -279,30 +291,32 @@ button:disabled {
 ============================================================ */
 
 .hero {
+  width: 100%;
+
   text-align: center;
 
-  margin-bottom: 34px;
+  margin-bottom: 42px;
 
   animation: fadeUp 0.55s ease both;
 }
 
 .hero-icon {
-  width: 68px;
-  height: 68px;
+  width: 76px;
+  height: 76px;
 
-  margin: 0 auto 17px;
+  margin: 0 auto 20px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 20px;
+  border-radius: 22px;
 
   background:
     linear-gradient(
       135deg,
-      rgb(219 234 254 / 78%),
-      rgb(224 231 255 / 78%)
+      rgb(219 234 254 / 82%),
+      rgb(224 231 255 / 82%)
     );
 
   border: 1px solid rgb(255 255 255 / 90%);
@@ -314,57 +328,64 @@ button:disabled {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 
-  font-size: 34px;
+  font-size: 38px;
 }
 
 .hero h2 {
-  margin: 0 0 11px;
+  margin: 0 0 13px;
 
   color: #0f172a;
 
-  font-size: clamp(30px, 5vw, 43px);
+  font-size: clamp(
+    32px,
+    4vw,
+    52px
+  );
 
-  line-height: 1.15;
+  line-height: 1.12;
 
-  letter-spacing: -1px;
+  letter-spacing: -1.4px;
 
   font-weight: 800;
 }
 
 .hero p {
-  max-width: 650px;
+  max-width: 720px;
 
   margin: 0 auto;
 
   color: #64748b;
 
-  font-size: 14px;
+  font-size: 16px;
 
   line-height: 1.75;
 }
 
 
 /* ============================================================
-   SEARCH CARD - GLASSMORPHISM
+   SEARCH CARD
 ============================================================ */
 
 .search-card {
-  padding: 25px;
+  width: 100%;
+
+  padding:
+    clamp(24px, 3vw, 34px);
 
   background:
     linear-gradient(
       135deg,
-      rgb(255 255 255 / 76%),
-      rgb(255 255 255 / 54%)
+      rgb(255 255 255 / 80%),
+      rgb(255 255 255 / 60%)
     );
 
-  border: 1px solid rgb(255 255 255 / 85%);
+  border: 1px solid rgb(255 255 255 / 88%);
 
-  border-radius: 22px;
+  border-radius: 24px;
 
   box-shadow:
-    0 20px 55px rgb(15 23 42 / 9%),
-    inset 0 1px 0 rgb(255 255 255 / 85%);
+    0 25px 65px rgb(15 23 42 / 10%),
+    inset 0 1px 0 rgb(255 255 255 / 90%);
 
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -381,11 +402,11 @@ button:disabled {
 .input-label {
   display: block;
 
-  margin-bottom: 10px;
+  margin-bottom: 11px;
 
   color: #172033;
 
-  font-size: 14px;
+  font-size: 15px;
 
   font-weight: 750;
 }
@@ -396,26 +417,28 @@ button:disabled {
 ============================================================ */
 
 .search-card textarea {
+  display: block;
+
   width: 100%;
 
-  min-height: 130px;
+  min-height: 170px;
 
   resize: vertical;
 
-  padding: 16px 17px;
+  padding: 18px 19px;
 
   border: 1px solid rgb(148 163 184 / 45%);
 
-  border-radius: 14px;
+  border-radius: 15px;
 
   outline: none;
 
   background:
-    rgb(255 255 255 / 65%);
+    rgb(255 255 255 / 70%);
 
   color: #172033;
 
-  font-size: 16px;
+  font-size: 17px;
 
   line-height: 1.7;
 
@@ -430,13 +453,13 @@ button:disabled {
 }
 
 .search-card textarea:hover {
-  background: rgb(255 255 255 / 78%);
+  background: rgb(255 255 255 / 82%);
 }
 
 .search-card textarea:focus {
   border-color: rgb(37 99 235 / 55%);
 
-  background: rgb(255 255 255 / 82%);
+  background: rgb(255 255 255 / 88%);
 
   box-shadow:
     0 0 0 4px rgb(37 99 235 / 10%),
@@ -453,7 +476,7 @@ button:disabled {
 
   color: #64748b;
 
-  font-size: 12px;
+  font-size: 13px;
 
   line-height: 1.5;
 }
@@ -461,7 +484,6 @@ button:disabled {
 
 /* ============================================================
    LANGUAGE SELECTOR
-   BELOW SEARCH BOX
 ============================================================ */
 
 .voice-language-selector {
@@ -469,20 +491,19 @@ button:disabled {
 
   align-items: center;
 
-  gap: 12px;
+  gap: 14px;
 
-  margin-top: 16px;
-
+  margin-top: 20px;
   margin-bottom: 5px;
 
-  padding: 11px 13px;
+  padding: 13px 15px;
 
-  border-radius: 13px;
+  border-radius: 14px;
 
   background:
-    rgb(255 255 255 / 48%);
+    rgb(255 255 255 / 52%);
 
-  border: 1px solid rgb(255 255 255 / 75%);
+  border: 1px solid rgb(255 255 255 / 78%);
 
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -493,7 +514,7 @@ button:disabled {
 
   color: #475569;
 
-  font-size: 13px;
+  font-size: 14px;
 
   font-weight: 700;
 
@@ -501,9 +522,9 @@ button:disabled {
 }
 
 .voice-language-selector select {
-  min-width: 145px;
+  min-width: 170px;
 
-  padding: 9px 12px;
+  padding: 10px 13px;
 
   border: 1px solid rgb(148 163 184 / 50%);
 
@@ -512,7 +533,7 @@ button:disabled {
   outline: none;
 
   background:
-    rgb(255 255 255 / 75%);
+    rgb(255 255 255 / 78%);
 
   color: #172033;
 
@@ -526,7 +547,7 @@ button:disabled {
 }
 
 .voice-language-selector select:hover {
-  background: rgb(255 255 255 / 90%);
+  background: rgb(255 255 255 / 92%);
 }
 
 .voice-language-selector select:focus {
@@ -536,19 +557,31 @@ button:disabled {
     0 0 0 3px rgb(37 99 235 / 12%);
 }
 
+.voice-language-selector span {
+  color: #64748b;
+
+  font-size: 13px;
+}
+
 
 /* ============================================================
    VOICE CONTROLS
 ============================================================ */
 
 .voice-controls {
-  display: flex;
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(200px, 0.75fr)
+    minmax(250px, 1.25fr);
 
   align-items: stretch;
 
-  gap: 12px;
+  gap: 14px;
 
-  margin-top: 14px;
+  margin-top: 16px;
 }
 
 
@@ -559,15 +592,15 @@ button:disabled {
 .voice-button,
 .ask-button,
 .listen-button {
-  min-height: 48px;
+  min-height: 52px;
 
   border: 0;
 
-  border-radius: 12px;
+  border-radius: 13px;
 
-  padding: 11px 20px;
+  padding: 12px 22px;
 
-  font-size: 14px;
+  font-size: 15px;
 
   font-weight: 750;
 
@@ -584,18 +617,18 @@ button:disabled {
 ============================================================ */
 
 .voice-button {
-  min-width: 190px;
+  width: 100%;
 
   background:
     linear-gradient(
       135deg,
-      rgb(238 242 255 / 90%),
-      rgb(224 231 255 / 82%)
+      rgb(238 242 255 / 92%),
+      rgb(224 231 255 / 85%)
     );
 
   color: #3730a3;
 
-  border: 1px solid rgb(255 255 255 / 85%);
+  border: 1px solid rgb(255 255 255 / 88%);
 
   box-shadow:
     0 7px 20px rgb(67 56 202 / 8%);
@@ -620,8 +653,8 @@ button:disabled {
   background:
     linear-gradient(
       135deg,
-      rgb(254 226 226 / 92%),
-      rgb(254 202 202 / 82%)
+      rgb(254 226 226 / 94%),
+      rgb(254 202 202 / 84%)
     );
 
   color: #991b1b;
@@ -638,7 +671,7 @@ button:disabled {
 ============================================================ */
 
 .ask-button {
-  flex: 1;
+  width: 100%;
 
   color: white;
 
@@ -686,11 +719,11 @@ button:disabled {
 .voice-status {
   min-height: 24px;
 
-  margin-top: 12px;
+  margin-top: 13px;
 
   color: #475569;
 
-  font-size: 13px;
+  font-size: 14px;
 
   line-height: 1.5;
 
@@ -703,14 +736,16 @@ button:disabled {
 ============================================================ */
 
 .error-message {
-  margin-top: 16px;
+  width: 100%;
 
-  padding: 13px 15px;
+  margin-top: 18px;
 
-  border-radius: 12px;
+  padding: 14px 16px;
+
+  border-radius: 13px;
 
   background:
-    rgb(254 242 242 / 75%);
+    rgb(254 242 242 / 78%);
 
   border: 1px solid rgb(252 165 165 / 60%);
 
@@ -735,23 +770,25 @@ button:disabled {
 ============================================================ */
 
 .result-card {
-  margin-top: 25px;
+  width: 100%;
+
+  margin-top: 28px;
 
   overflow: hidden;
 
   background:
     linear-gradient(
       135deg,
-      rgb(255 255 255 / 78%),
-      rgb(255 255 255 / 58%)
+      rgb(255 255 255 / 80%),
+      rgb(255 255 255 / 60%)
     );
 
-  border: 1px solid rgb(255 255 255 / 85%);
+  border: 1px solid rgb(255 255 255 / 88%);
 
-  border-radius: 22px;
+  border-radius: 24px;
 
   box-shadow:
-    0 20px 55px rgb(15 23 42 / 9%),
+    0 25px 65px rgb(15 23 42 / 10%),
     inset 0 1px 0 rgb(255 255 255 / 90%);
 
   backdrop-filter: blur(20px);
@@ -766,9 +803,9 @@ button:disabled {
 ============================================================ */
 
 .result-header {
-  min-height: 72px;
+  min-height: 78px;
 
-  padding: 17px 22px;
+  padding: 18px 25px;
 
   display: flex;
 
@@ -776,20 +813,20 @@ button:disabled {
 
   justify-content: space-between;
 
-  gap: 15px;
+  gap: 18px;
 
   background:
-    rgb(248 250 252 / 55%);
+    rgb(248 250 252 / 58%);
 
   border-bottom: 1px solid rgb(226 232 240 / 60%);
 }
 
 .result-label {
-  margin: 0 0 5px;
+  margin: 0 0 6px;
 
   color: #64748b;
 
-  font-size: 11px;
+  font-size: 12px;
 
   font-weight: 800;
 
@@ -803,7 +840,7 @@ button:disabled {
 
   color: #0f172a;
 
-  font-size: 20px;
+  font-size: 23px;
 
   line-height: 1.3;
 
@@ -823,24 +860,24 @@ button:disabled {
   align-items: center;
   justify-content: center;
 
-  min-height: 34px;
+  min-height: 36px;
 
-  padding: 7px 13px;
+  padding: 7px 14px;
 
   border-radius: 999px;
 
   background:
     linear-gradient(
       135deg,
-      rgb(219 234 254 / 82%),
-      rgb(224 231 255 / 78%)
+      rgb(219 234 254 / 85%),
+      rgb(224 231 255 / 80%)
     );
 
   border: 1px solid rgb(255 255 255 / 80%);
 
   color: #1d4ed8;
 
-  font-size: 12px;
+  font-size: 13px;
 
   font-weight: 750;
 
@@ -856,13 +893,14 @@ button:disabled {
 ============================================================ */
 
 .answer {
-  padding: 24px;
+  padding:
+    clamp(24px, 3vw, 34px);
 
   color: #334155;
 
-  font-size: 16px;
+  font-size: 17px;
 
-  line-height: 1.8;
+  line-height: 1.85;
 
   overflow-wrap: anywhere;
 
@@ -871,7 +909,7 @@ button:disabled {
 
 .answer[lang="te"],
 .answer[lang="hi"] {
-  line-height: 1.95;
+  line-height: 2;
 }
 
 .answer[lang="ur"] {
@@ -883,9 +921,9 @@ button:disabled {
     Arial,
     sans-serif;
 
-  font-size: 18px;
+  font-size: 19px;
 
-  line-height: 2.05;
+  line-height: 2.1;
 }
 
 
@@ -898,7 +936,10 @@ button:disabled {
 
   justify-content: flex-end;
 
-  padding: 0 24px 24px;
+  padding:
+    0
+    clamp(24px, 3vw, 34px)
+    clamp(24px, 3vw, 30px);
 }
 
 
@@ -907,13 +948,13 @@ button:disabled {
 ============================================================ */
 
 .listen-button {
-  min-width: 200px;
+  min-width: 220px;
 
   background:
     linear-gradient(
       135deg,
-      rgb(236 253 245 / 90%),
-      rgb(209 250 229 / 80%)
+      rgb(236 253 245 / 92%),
+      rgb(209 250 229 / 82%)
     );
 
   color: #047857;
@@ -999,18 +1040,18 @@ button:disabled {
 footer {
   width: 100%;
 
-  padding: 20px 15px;
+  padding: 21px 15px;
 
   text-align: center;
 
   background:
-    rgb(255 255 255 / 55%);
+    rgb(255 255 255 / 58%);
 
   border-top: 1px solid rgb(255 255 255 / 75%);
 
   color: #64748b;
 
-  font-size: 12px;
+  font-size: 13px;
 
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
@@ -1024,13 +1065,11 @@ footer {
 @keyframes fadeUp {
   from {
     opacity: 0;
-
     transform: translateY(12px);
   }
 
   to {
     opacity: 1;
-
     transform: translateY(0);
   }
 }
@@ -1038,13 +1077,11 @@ footer {
 @keyframes resultAppear {
   from {
     opacity: 0;
-
     transform: translateY(15px) scale(0.99);
   }
 
   to {
     opacity: 1;
-
     transform: translateY(0) scale(1);
   }
 }
@@ -1074,20 +1111,116 @@ footer {
 
 
 /* ============================================================
-   TABLET
+   LARGE DESKTOP
+   1400px+
 ============================================================ */
 
-@media (max-width: 700px) {
-  .header {
-    padding: 13px 5%;
+@media (min-width: 1400px) {
+  .container {
+    width: min(1250px, calc(100% - 100px));
 
-    min-height: 72px;
+    padding-top: 100px;
+  }
+
+  .hero {
+    margin-bottom: 48px;
+  }
+
+  .hero-icon {
+    width: 84px;
+    height: 84px;
+
+    font-size: 42px;
+  }
+
+  .search-card {
+    padding: 38px;
+  }
+
+  .search-card textarea {
+    min-height: 190px;
+
+    font-size: 18px;
+  }
+
+  .voice-button,
+  .ask-button {
+    min-height: 56px;
+
+    font-size: 16px;
+  }
+
+  .result-header h2 {
+    font-size: 25px;
+  }
+
+  .answer {
+    font-size: 18px;
+  }
+}
+
+
+/* ============================================================
+   LAPTOP
+   1000px - 1199px
+============================================================ */
+
+@media (max-width: 1199px) {
+  .container {
+    width: min(1000px, calc(100% - 44px));
+
+    padding-top: 65px;
+  }
+
+  .hero h2 {
+    font-size: clamp(
+      32px,
+      4.5vw,
+      46px
+    );
+  }
+}
+
+
+/* ============================================================
+   TABLET
+   701px - 900px
+============================================================ */
+
+@media (max-width: 900px) {
+  .header {
+    padding:
+      13px
+      4%;
   }
 
   .container {
-    width: 92%;
+    width: calc(100% - 36px);
 
-    padding-top: 45px;
+    padding:
+      50px
+      0
+      65px;
+  }
+
+  .hero {
+    margin-bottom: 32px;
+  }
+
+  .hero h2 {
+    font-size: 38px;
+  }
+
+  .hero p {
+    font-size: 15px;
+  }
+
+  .search-card {
+    padding: 25px;
+  }
+
+  .voice-controls {
+    grid-template-columns: 1fr 1fr;
   }
 
   .voice-language-selector {
@@ -1097,20 +1230,25 @@ footer {
   .voice-language-selector select {
     flex: 1;
 
-    min-width: 130px;
+    min-width: 150px;
   }
 }
 
 
 /* ============================================================
    MOBILE
+   <= 700px
 ============================================================ */
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   .header {
-    padding: 12px 4%;
-
     min-height: 68px;
+
+    padding:
+      11px
+      4%;
+
+    gap: 12px;
   }
 
   .brand {
@@ -1145,28 +1283,33 @@ footer {
   }
 
   .container {
-    width: 94%;
+    width: calc(100% - 28px);
 
-    padding: 35px 0 50px;
+    padding:
+      38px
+      0
+      50px;
   }
 
   .hero {
-    margin-bottom: 25px;
+    margin-bottom: 26px;
   }
 
   .hero-icon {
-    width: 59px;
-    height: 59px;
+    width: 62px;
+    height: 62px;
 
-    font-size: 29px;
+    margin-bottom: 16px;
 
-    border-radius: 17px;
+    font-size: 30px;
+
+    border-radius: 18px;
   }
 
   .hero h2 {
-    font-size: 29px;
+    font-size: 30px;
 
-    letter-spacing: -0.6px;
+    letter-spacing: -0.7px;
   }
 
   .hero p {
@@ -1176,17 +1319,26 @@ footer {
   }
 
   .search-card {
-    padding: 17px;
+    padding: 18px;
 
-    border-radius: 17px;
+    border-radius: 18px;
+  }
+
+  .search-card label,
+  .input-label {
+    font-size: 13px;
   }
 
   .search-card textarea {
-    min-height: 115px;
+    min-height: 125px;
 
     padding: 14px;
 
     font-size: 15px;
+  }
+
+  .query-help {
+    font-size: 11px;
   }
 
   .voice-language-selector {
@@ -1197,18 +1349,34 @@ footer {
     gap: 8px;
 
     padding: 11px;
+
+    margin-top: 15px;
+  }
+
+  .voice-language-selector label {
+    font-size: 12px;
   }
 
   .voice-language-selector select {
     width: 100%;
 
     min-width: 0;
+
+    font-size: 14px;
+  }
+
+  .voice-language-selector span {
+    font-size: 12px;
   }
 
   .voice-controls {
+    display: flex;
+
     flex-direction: column;
 
     gap: 10px;
+
+    margin-top: 13px;
   }
 
   .voice-button,
@@ -1216,10 +1384,24 @@ footer {
     width: 100%;
 
     min-width: 0;
+
+    min-height: 48px;
+
+    font-size: 14px;
+  }
+
+  .voice-status {
+    font-size: 12px;
+  }
+
+  .error-message {
+    font-size: 13px;
   }
 
   .result-card {
-    border-radius: 17px;
+    margin-top: 20px;
+
+    border-radius: 18px;
   }
 
   .result-header {
@@ -1227,19 +1409,40 @@ footer {
 
     flex-direction: column;
 
-    padding: 16px 18px;
+    padding: 17px 18px;
+
+    gap: 10px;
+  }
+
+  .result-label {
+    font-size: 10px;
+  }
+
+  .result-header h2 {
+    font-size: 19px;
   }
 
   .language-badge {
     width: fit-content;
+
+    min-height: 31px;
+
+    padding: 6px 11px;
+
+    font-size: 11px;
   }
 
   .answer {
-    padding: 18px;
+    padding: 19px;
 
     font-size: 15px;
 
-    line-height: 1.75;
+    line-height: 1.8;
+  }
+
+  .answer[lang="te"],
+  .answer[lang="hi"] {
+    line-height: 1.9;
   }
 
   .answer[lang="ur"] {
@@ -1249,30 +1452,44 @@ footer {
   }
 
   .result-actions {
-    padding: 0 18px 18px;
+    padding:
+      0
+      18px
+      18px;
   }
 
   .listen-button {
     width: 100%;
 
     min-width: 0;
+
+    min-height: 48px;
+
+    font-size: 14px;
   }
 
   footer {
-    padding: 18px 12px;
+    padding:
+      18px
+      12px;
 
     font-size: 11px;
+
+    line-height: 1.5;
   }
 }
 
 
 /* ============================================================
    SMALL PHONES
+   <= 400px
 ============================================================ */
 
 @media (max-width: 400px) {
   .header {
-    padding: 11px 3%;
+    padding:
+      10px
+      3%;
   }
 
   .flag {
@@ -1295,21 +1512,47 @@ footer {
   }
 
   .container {
-    width: 94%;
+    width: calc(100% - 22px);
 
     padding-top: 30px;
+  }
+
+  .hero-icon {
+    width: 56px;
+    height: 56px;
+
+    font-size: 27px;
   }
 
   .hero h2 {
     font-size: 26px;
   }
 
+  .hero p {
+    font-size: 12px;
+  }
+
   .search-card {
     padding: 14px;
+
+    border-radius: 16px;
+  }
+
+  .search-card textarea {
+    min-height: 115px;
+
+    font-size: 14px;
   }
 
   .voice-language-selector {
     padding: 10px;
+  }
+
+  .voice-button,
+  .ask-button {
+    min-height: 46px;
+
+    font-size: 13px;
   }
 
   .answer {
@@ -1317,6 +1560,127 @@ footer {
 
     font-size: 14px;
   }
+
+  .result-header {
+    padding: 15px;
+  }
+
+  .result-actions {
+    padding:
+      0
+      15px
+      15px;
+  }
+}
+
+
+/* ============================================================
+   VERY SMALL PHONES
+   <= 340px
+============================================================ */
+
+@media (max-width: 340px) {
+  .brand h1 {
+    font-size: 17px;
+  }
+
+  .language-indicator {
+    min-width: auto;
+
+    padding:
+      5px
+      7px;
+  }
+
+  .hero h2 {
+    font-size: 24px;
+  }
+
+  .container {
+    width: calc(100% - 18px);
+  }
+
+  .search-card {
+    padding: 12px;
+  }
+}
+
+
+/* ============================================================
+   RTL SUPPORT
+============================================================ */
+
+.rtl {
+  font-family:
+    "Noto Naskh Arabic",
+    "Noto Nastaliq Urdu",
+    "Noto Sans Arabic",
+    Tahoma,
+    Arial,
+    sans-serif;
+}
+
+.rtl .header {
+  direction: rtl;
+}
+
+.rtl .brand {
+  direction: rtl;
+}
+
+.rtl .voice-language-selector {
+  direction: rtl;
+}
+
+.rtl .result-header {
+  direction: rtl;
+}
+
+.rtl .result-actions {
+  justify-content: flex-start;
+}
+
+.rtl textarea {
+  text-align: right;
+}
+
+.rtl .answer {
+  text-align: right;
+}
+
+
+/* ============================================================
+   LINKS INSIDE ANSWER
+============================================================ */
+
+.answer-link {
+  color: #2563eb;
+
+  text-decoration: underline;
+
+  font-weight: 650;
+
+  cursor: pointer;
+
+  word-break: break-word;
+
+  overflow-wrap: anywhere;
+
+  transition:
+    opacity 0.2s ease,
+    color 0.2s ease;
+}
+
+.answer-link:hover {
+  color: #1d4ed8;
+
+  opacity: 0.8;
+
+  text-decoration: none;
+}
+
+.answer strong {
+  font-weight: 750;
 }
 
 
@@ -1342,7 +1706,7 @@ footer {
 
 
 /* ============================================================
-   HIGH CONTRAST / FOCUS
+   HIGH CONTRAST
 ============================================================ */
 
 @media (prefers-contrast: more) {
@@ -1360,33 +1724,4 @@ footer {
   .language-badge {
     border-color: #1d4ed8;
   }
-}
- 
-.answer-link {
-  color: #2563eb;
-  text-decoration: underline;
-  font-weight: 600;
-  word-break: break-all;
-  cursor: pointer;
-}
-
-.answer-link:hover {
-  text-decoration: none;
-  opacity: 0.8;
-}
-
-.answer strong {
-  font-weight: 700;
-}
-
-.answer-link {
-  color: #2563eb;
-  text-decoration: underline;
-  font-weight: 600;
-  cursor: pointer;
-  word-break: break-word;
-}
-
-.answer-link:hover {
-  opacity: 0.8;
 }

@@ -1,10 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 
-// ============================================================
-// API CONFIGURATION
-// ============================================================
-
 const API_BASE =
   import.meta.env.VITE_API_BASE_URL ||
   (window.location.hostname === "localhost" ||
@@ -12,9 +8,6 @@ const API_BASE =
     ? "http://127.0.0.1:8000"
     : "/api");
 
-// ============================================================
-// LANGUAGES
-// ============================================================
 
 const LANGUAGES = {
   en: {
@@ -35,9 +28,6 @@ const LANGUAGES = {
   },
 };
 
-// ============================================================
-// HELPER - SAFE JSON RESPONSE
-// ============================================================
 
 async function parseResponse(response) {
   const contentType =
@@ -56,9 +46,7 @@ async function parseResponse(response) {
   };
 }
 
-// ============================================================
-// HELPER - REMOVE URL TRAILING PUNCTUATION
-// ============================================================
+
 
 function cleanUrl(rawUrl) {
   let url = rawUrl;
@@ -78,24 +66,6 @@ function cleanUrl(rawUrl) {
   };
 }
 
-// ============================================================
-// HELPER - RENDER CLICKABLE LINKS
-// ============================================================
-//
-// Supports:
-//
-// 1. Plain URL
-//    https://example.com
-//
-// 2. Markdown URL
-//    [Apply Here](https://example.com)
-//
-// 3. Bold text
-//    **Application URL:**
-//
-// 4. URLs followed by punctuation
-//    https://example.com.
-// ============================================================
 
 function renderInlineText(text, keyPrefix = "") {
   if (!text) {
@@ -120,10 +90,6 @@ function renderInlineText(text, keyPrefix = "") {
     }
 
     const token = match[0];
-
-    // ========================================================
-    // MARKDOWN LINK
-    // ========================================================
 
     if (
       token.startsWith("[") &&
@@ -166,10 +132,6 @@ function renderInlineText(text, keyPrefix = "") {
       }
     }
 
-    // ========================================================
-    // PLAIN URL
-    // ========================================================
-
     if (
       token.startsWith("http://") ||
       token.startsWith("https://")
@@ -199,10 +161,6 @@ function renderInlineText(text, keyPrefix = "") {
 
       continue;
     }
-
-    // ========================================================
-    // BOLD TEXT
-    // ========================================================
 
     if (
       token.startsWith("**") &&
@@ -249,14 +207,6 @@ function renderInlineText(text, keyPrefix = "") {
   return parts;
 }
 
-// ============================================================
-// HELPER - RENDER COMPLETE ANSWER
-// ============================================================
-//
-// Keeps line breaks while converting every URL into
-// a clickable link.
-// ============================================================
-
 function renderAnswer(text) {
   if (!text) {
     return null;
@@ -273,30 +223,16 @@ function renderAnswer(text) {
   ));
 }
 
-// ============================================================
-// APP
-// ============================================================
 
 function App() {
-  // ==========================================================
-  // SEARCH
-  // ==========================================================
 
   const [query, setQuery] = useState("");
   const [answer, setAnswer] = useState("");
   const [serviceId, setServiceId] = useState("");
 
-  // ==========================================================
-  // LANGUAGE
-  // ==========================================================
-
   const [language, setLanguage] = useState("en");
   const [detectedLanguage, setDetectedLanguage] =
     useState("en");
-
-  // ==========================================================
-  // UI STATES
-  // ==========================================================
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -310,10 +246,6 @@ function App() {
   const [voiceStatus, setVoiceStatus] =
     useState("");
 
-  // ==========================================================
-  // REFS
-  // ==========================================================
-
   const mediaRecorderRef =
     useRef(null);
 
@@ -325,10 +257,6 @@ function App() {
 
   const audioRef =
     useRef(null);
-
-  // ==========================================================
-  // LANGUAGE DETECTION
-  // ==========================================================
 
   const detectLanguageFromText = (text) => {
     if (!text || !text.trim()) {
@@ -357,10 +285,6 @@ function App() {
     return "en";
   };
 
-  // ==========================================================
-  // STOP AUDIO
-  // ==========================================================
-
   const stopSpeaking = () => {
     if (audioRef.current) {
       try {
@@ -377,10 +301,6 @@ function App() {
     setVoiceStatus("");
   };
 
-  // ==========================================================
-  // LANGUAGE CHANGE
-  // ==========================================================
-
   const handleLanguageChange = (event) => {
     const selectedLanguage =
       event.target.value;
@@ -395,10 +315,6 @@ function App() {
 
     stopSpeaking();
   };
-
-  // ==========================================================
-  // START LISTENING
-  // ==========================================================
 
   const startListening = async () => {
     setError("");
@@ -420,7 +336,7 @@ function App() {
       return;
     }
 
-    // Stop existing recorder
+    
     if (mediaRecorderRef.current) {
       try {
         if (
