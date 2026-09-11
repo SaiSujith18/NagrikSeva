@@ -8,26 +8,28 @@ const API_BASE =
     ? "http://127.0.0.1:8000"
     : "/api");
 
-
 const LANGUAGES = {
   en: {
     name: "English",
     code: "en",
+    speechCode: "en-IN",
   },
   te: {
     name: "తెలుగు",
     code: "te",
+    speechCode: "te-IN",
   },
   hi: {
     name: "हिन्दी",
     code: "hi",
+    speechCode: "hi-IN",
   },
   ur: {
     name: "اردو",
     code: "ur",
+    speechCode: "ur-IN",
   },
 };
-
 
 async function parseResponse(response) {
   const contentType =
@@ -46,17 +48,43 @@ async function parseResponse(response) {
   };
 }
 
-
+/* ==========================================================
+   URL HELPERS
+========================================================== */
 
 function cleanUrl(rawUrl) {
   let url = rawUrl;
   let trailing = "";
 
+  /*
+   * Remove punctuation that normally comes after URLs.
+   *
+   * Example:
+   * https://example.com.
+   *
+   * becomes:
+   * https://example.com
+   */
   while (
     url.length > 0 &&
     /[.,!?;:]+$/.test(url)
   ) {
     trailing += url[url.length - 1];
+    url = url.slice(0, -1);
+  }
+
+  /*
+   * Handle closing brackets separately.
+   *
+   * Example:
+   * https://example.com)
+   */
+  while (
+    url.endsWith(")") &&
+    (url.match(/\(/g) || []).length <
+      (url.match(/\)/g) || []).length
+  ) {
+    trailing = ")" + trailing;
     url = url.slice(0, -1);
   }
 
@@ -66,54 +94,115 @@ function cleanUrl(rawUrl) {
   };
 }
 
+function normalizeUrl(url) {
+  if (
+    url.startsWith("http://") ||
+    url.startsWith("https://")
+  ) {
+    return url;
+  }
 
-function renderInlineText(text, keyPrefix = "") {
+  if (url.startsWith("www.")) {
+    return `https://${url}`;
+  }
+
+  return url;
+}
+
+/* ==========================================================
+   INLINE TEXT RENDERER
+========================================================== */
+
+function renderInlineText(
+  text,
+  keyPrefix = ""
+) {
   if (!text) {
     return null;
   }
 
+  /*
+   * Supports:
+   *
+   * 1. Markdown links
+   *    [Click here](https://example.com)
+   *
+   * 2. HTTPS URLs
+   *    https://example.com
+   *
+   * 3. HTTP URLs
+   *    http://example.com
+   *
+   * 4. WWW URLs
+   *    www.example.com
+   *
+   * 5. Bold text
+   *    **Important**
+   */
+
   const tokenRegex =
-    /(\[[^\]]+\]\(https?:\/\/[^)\s]+\)|https?:\/\/[^\s<>"'`)\]}]+|\*\*[^*]+\*\*)/g;
+    /(\[[^\]]+\]\((?:https?:\/\/|www\.)[^)\s]+\)|(?:https?:\/\/|www\.)[^\s<>"'`\\\]}]+|\*\*[^*]+\*\*)/gi;
 
   const parts = [];
+
   let lastIndex = 0;
   let match;
 
-  while ((match = tokenRegex.exec(text)) !== null) {
-    // Normal text before token
+  while (
+    (match = tokenRegex.exec(text)) !== null
+  ) {
+    /*
+     * Add normal text before token
+     */
     if (match.index > lastIndex) {
       parts.push(
-        <span key={`${keyPrefix}-text-${lastIndex}`}>
-          {text.slice(lastIndex, match.index)}
+        <span
+          key={`${keyPrefix}-text-${lastIndex}`}
+        >
+          {text.slice(
+            lastIndex,
+            match.index
+          )}
         </span>
       );
     }
 
     const token = match[0];
 
+    /* ======================================================
+       MARKDOWN LINK
+    ====================================================== */
+
     if (
       token.startsWith("[") &&
-      token.includes("](") &&
-      token.endsWith(")")
+      token.includes("](")
     ) {
       const markdownMatch =
         token.match(
-          /^\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)$/
+          /^\[([^\]]+)\]\(((?:https?:\/\/|www\.)[^)\s]+)\)$/
         );
 
       if (markdownMatch) {
-        const linkText = markdownMatch[1];
-        const rawUrl = markdownMatch[2];
+        const linkText =
+          markdownMatch[1];
 
-        const { url, trailing } =
-          cleanUrl(rawUrl);
+        const rawUrl =
+          markdownMatch[2];
+
+        const {
+          url,
+          trailing,
+        } = cleanUrl(rawUrl);
+
+        const href =
+          normalizeUrl(url);
 
         parts.push(
           <span
-            key={`${keyPrefix}-link-${match.index}`}
+            key={`${keyPrefix}-markdown-link-${match.index}`}
           >
             <a
-              href={url}
+              href={href}
               target="_blank"
               rel="noopener noreferrer"
               className="answer-link"
@@ -132,22 +221,33 @@ function renderInlineText(text, keyPrefix = "") {
       }
     }
 
+    /* ======================================================
+       NORMAL URL
+    ====================================================== */
+
     if (
       token.startsWith("http://") ||
-      token.startsWith("https://")
+      token.startsWith("https://") ||
+      token.startsWith("www.")
     ) {
-      const { url, trailing } =
-        cleanUrl(token);
+      const {
+        url,
+        trailing,
+      } = cleanUrl(token);
+
+      const href =
+        normalizeUrl(url);
 
       parts.push(
         <span
           key={`${keyPrefix}-url-${match.index}`}
         >
           <a
-            href={url}
+            href={href}
             target="_blank"
             rel="noopener noreferrer"
             className="answer-link"
+            title={`Open ${url}`}
           >
             {url}
           </a>
@@ -161,6 +261,10 @@ function renderInlineText(text, keyPrefix = "") {
 
       continue;
     }
+
+    /* ======================================================
+       BOLD TEXT
+    ====================================================== */
 
     if (
       token.startsWith("**") &&
@@ -180,7 +284,10 @@ function renderInlineText(text, keyPrefix = "") {
       continue;
     }
 
-    // Fallback
+    /* ======================================================
+       FALLBACK
+    ====================================================== */
+
     parts.push(
       <span
         key={`${keyPrefix}-fallback-${match.index}`}
@@ -193,7 +300,9 @@ function renderInlineText(text, keyPrefix = "") {
       match.index + token.length;
   }
 
-  // Remaining text
+  /*
+   * Add remaining text
+   */
   if (lastIndex < text.length) {
     parts.push(
       <span
@@ -207,44 +316,77 @@ function renderInlineText(text, keyPrefix = "") {
   return parts;
 }
 
+/* ==========================================================
+   ANSWER RENDERER
+========================================================== */
+
 function renderAnswer(text) {
   if (!text) {
     return null;
   }
 
-  const lines = String(text).split(/\r?\n/);
+  const lines =
+    String(text).split(/\r?\n/);
 
-  return lines.map((line, index) => (
-    <span key={`line-${index}`}>
-      {renderInlineText(line, `line-${index}`)}
+  return lines.map(
+    (line, index) => (
+      <span key={`line-${index}`}>
+        {renderInlineText(
+          line,
+          `line-${index}`
+        )}
 
-      {index < lines.length - 1 && <br />}
-    </span>
-  ));
+        {index <
+          lines.length - 1 && (
+          <br />
+        )}
+      </span>
+    )
+  );
 }
 
+/* ==========================================================
+   APP
+========================================================== */
 
 function App() {
+  const [query, setQuery] =
+    useState("");
 
-  const [query, setQuery] = useState("");
-  const [answer, setAnswer] = useState("");
-  const [serviceId, setServiceId] = useState("");
+  const [answer, setAnswer] =
+    useState("");
 
-  const [language, setLanguage] = useState("en");
-  const [detectedLanguage, setDetectedLanguage] =
+  const [serviceId, setServiceId] =
+    useState("");
+
+  const [language, setLanguage] =
     useState("en");
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [
+    detectedLanguage,
+    setDetectedLanguage,
+  ] = useState("en");
 
-  const [isListening, setIsListening] =
+  const [loading, setLoading] =
     useState(false);
 
-  const [isSpeaking, setIsSpeaking] =
-    useState(false);
-
-  const [voiceStatus, setVoiceStatus] =
+  const [error, setError] =
     useState("");
+
+  const [
+    isListening,
+    setIsListening,
+  ] = useState(false);
+
+  const [
+    isSpeaking,
+    setIsSpeaking,
+  ] = useState(false);
+
+  const [
+    voiceStatus,
+    setVoiceStatus,
+  ] = useState("");
 
   const mediaRecorderRef =
     useRef(null);
@@ -258,32 +400,51 @@ function App() {
   const audioRef =
     useRef(null);
 
-  const detectLanguageFromText = (text) => {
-    if (!text || !text.trim()) {
+  const recognitionRef =
+    useRef(null);
+
+  const isBrowserFallbackRef =
+    useRef(false);
+
+  /* ========================================================
+     LANGUAGE DETECTION
+  ======================================================== */
+
+  const detectLanguageFromText =
+    (text) => {
+      if (!text || !text.trim()) {
+        return "en";
+      }
+
+      // Telugu
+      if (
+        /[\u0C00-\u0C7F]/.test(text)
+      ) {
+        return "te";
+      }
+
+      // Hindi / Devanagari
+      if (
+        /[\u0900-\u097F]/.test(text)
+      ) {
+        return "hi";
+      }
+
+      // Urdu / Arabic
+      if (
+        /[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF]/.test(
+          text
+        )
+      ) {
+        return "ur";
+      }
+
       return "en";
-    }
+    };
 
-    // Telugu
-    if (/[\u0C00-\u0C7F]/.test(text)) {
-      return "te";
-    }
-
-    // Hindi / Devanagari
-    if (/[\u0900-\u097F]/.test(text)) {
-      return "hi";
-    }
-
-    // Urdu / Arabic
-    if (
-      /[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF]/.test(
-        text
-      )
-    ) {
-      return "ur";
-    }
-
-    return "en";
-  };
+  /* ========================================================
+     STOP SPEAKING
+  ======================================================== */
 
   const stopSpeaking = () => {
     if (audioRef.current) {
@@ -301,11 +462,20 @@ function App() {
     setVoiceStatus("");
   };
 
-  const handleLanguageChange = (event) => {
+  /* ========================================================
+     LANGUAGE CHANGE
+  ======================================================== */
+
+  const handleLanguageChange = (
+    event
+  ) => {
     const selectedLanguage =
       event.target.value;
 
-    setLanguage(selectedLanguage);
+    setLanguage(
+      selectedLanguage
+    );
+
     setDetectedLanguage(
       selectedLanguage
     );
@@ -314,18 +484,255 @@ function App() {
     setVoiceStatus("");
 
     stopSpeaking();
+
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+      } catch {
+        // Ignore
+      }
+
+      recognitionRef.current = null;
+    }
+
+    isBrowserFallbackRef.current =
+      false;
+
+    setIsListening(false);
   };
+
+  /* ========================================================
+     BROWSER SPEECH RECOGNITION
+  ======================================================== */
+
+  const startBrowserSpeechRecognition =
+    () => {
+      const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+      if (!SpeechRecognition) {
+        setIsListening(false);
+
+        setVoiceStatus("");
+
+        setError(
+          "Sarvam STT has no credits available, and your browser does not support speech recognition. Please use Google Chrome or Microsoft Edge."
+        );
+
+        return;
+      }
+
+      try {
+        if (recognitionRef.current) {
+          try {
+            recognitionRef.current.stop();
+          } catch {
+            // Ignore
+          }
+        }
+
+        const recognition =
+          new SpeechRecognition();
+
+        recognitionRef.current =
+          recognition;
+
+        isBrowserFallbackRef.current =
+          true;
+
+        recognition.lang =
+          LANGUAGES[language]
+            ?.speechCode || "en-IN";
+
+        recognition.continuous =
+          false;
+
+        recognition.interimResults =
+          true;
+
+        recognition.maxAlternatives =
+          1;
+
+        recognition.onstart = () => {
+          setIsListening(true);
+
+          setVoiceStatus(
+            `🌐 Sarvam credits unavailable — using browser speech recognition in ${
+              LANGUAGES[language]
+                ?.name || "English"
+            }...`
+          );
+        };
+
+        recognition.onresult = (
+          event
+        ) => {
+          let transcript = "";
+
+          for (
+            let i =
+              event.resultIndex;
+            i <
+            event.results.length;
+            i++
+          ) {
+            transcript +=
+              event.results[i][0]
+                .transcript;
+          }
+
+          transcript =
+            transcript.trim();
+
+          if (transcript) {
+            setQuery(transcript);
+
+            const detected =
+              detectLanguageFromText(
+                transcript
+              );
+
+            const finalLanguage =
+              detected !== "en"
+                ? detected
+                : language;
+
+            setLanguage(
+              finalLanguage
+            );
+
+            setDetectedLanguage(
+              finalLanguage
+            );
+
+            setVoiceStatus(
+              `📝 ${
+                LANGUAGES[
+                  finalLanguage
+                ]?.name ||
+                "English"
+              } speech recognized`
+            );
+          }
+        };
+
+        recognition.onerror = (
+          event
+        ) => {
+          console.error(
+            "Browser speech recognition error:",
+            event
+          );
+
+          setIsListening(false);
+
+          recognitionRef.current =
+            null;
+
+          isBrowserFallbackRef.current =
+            false;
+
+          if (
+            event.error ===
+            "not-allowed"
+          ) {
+            setError(
+              "Browser microphone permission was denied. Please allow microphone access and try again."
+            );
+          } else if (
+            event.error ===
+            "no-speech"
+          ) {
+            setError(
+              "No speech was detected. Please try again."
+            );
+          } else if (
+            event.error ===
+            "audio-capture"
+          ) {
+            setError(
+              "No microphone was available for browser speech recognition."
+            );
+          } else {
+            setError(
+              `Browser speech recognition failed: ${
+                event.error ||
+                "Unknown error"
+              }`
+            );
+          }
+
+          setVoiceStatus("");
+        };
+
+        recognition.onend = () => {
+          setIsListening(false);
+
+          recognitionRef.current =
+            null;
+
+          isBrowserFallbackRef.current =
+            false;
+
+          setVoiceStatus(
+            (current) =>
+              current.includes(
+                "recognized"
+              )
+                ? current
+                : ""
+          );
+        };
+
+        recognition.start();
+      } catch (err) {
+        console.error(
+          "Unable to start browser speech recognition:",
+          err
+        );
+
+        setIsListening(false);
+
+        recognitionRef.current =
+          null;
+
+        isBrowserFallbackRef.current =
+          false;
+
+        setVoiceStatus("");
+
+        setError(
+          `Browser speech recognition could not start: ${
+            err?.message ||
+            "Unknown error"
+          }`
+        );
+      }
+    };
+
+  /* ========================================================
+     START LISTENING
+  ======================================================== */
 
   const startListening = async () => {
     setError("");
     setVoiceStatus("");
 
     if (
-      !navigator.mediaDevices?.getUserMedia
+      isBrowserFallbackRef.current
+    ) {
+      return;
+    }
+
+    if (
+      !navigator.mediaDevices
+        ?.getUserMedia
     ) {
       setError(
         "Microphone recording is not supported in this browser."
       );
+
       return;
     }
 
@@ -333,15 +740,15 @@ function App() {
       setError(
         "Audio recording is not supported in this browser."
       );
+
       return;
     }
 
-    
     if (mediaRecorderRef.current) {
       try {
         if (
-          mediaRecorderRef.current.state !==
-          "inactive"
+          mediaRecorderRef.current
+            .state !== "inactive"
         ) {
           mediaRecorderRef.current.stop();
         }
@@ -351,10 +758,6 @@ function App() {
     }
 
     try {
-      // ======================================================
-      // MICROPHONE
-      // ======================================================
-
       const stream =
         await navigator.mediaDevices.getUserMedia(
           {
@@ -366,12 +769,10 @@ function App() {
           }
         );
 
-      streamRef.current = stream;
-      audioChunksRef.current = [];
+      streamRef.current =
+        stream;
 
-      // ======================================================
-      // MIME TYPE
-      // ======================================================
+      audioChunksRef.current = [];
 
       let mimeType = "";
 
@@ -398,17 +799,14 @@ function App() {
       }
 
       const recorder = mimeType
-        ? new MediaRecorder(stream, {
-            mimeType,
-          })
+        ? new MediaRecorder(
+            stream,
+            { mimeType }
+          )
         : new MediaRecorder(stream);
 
       mediaRecorderRef.current =
         recorder;
-
-      // ======================================================
-      // AUDIO DATA
-      // ======================================================
 
       recorder.ondataavailable = (
         event
@@ -423,24 +821,16 @@ function App() {
         }
       };
 
-      // ======================================================
-      // START
-      // ======================================================
-
       recorder.onstart = () => {
         setIsListening(true);
 
         setVoiceStatus(
           `🎤 Listening in ${
-            LANGUAGES[language]?.name ||
-            "English"
+            LANGUAGES[language]
+              ?.name || "English"
           }... Speak now`
         );
       };
-
-      // ======================================================
-      // STOP
-      // ======================================================
 
       recorder.onstop = async () => {
         setIsListening(false);
@@ -449,7 +839,6 @@ function App() {
           "🔄 Converting speech to text..."
         );
 
-        // Stop microphone
         if (streamRef.current) {
           streamRef.current
             .getTracks()
@@ -482,12 +871,10 @@ function App() {
           }
         );
 
-        await sendAudioToSarvam(blob);
+        await sendAudioToSarvam(
+          blob
+        );
       };
-
-      // ======================================================
-      // RECORDER ERROR
-      // ======================================================
 
       recorder.onerror = (event) => {
         console.error(
@@ -512,10 +899,6 @@ function App() {
           streamRef.current = null;
         }
       };
-
-      // ======================================================
-      // START RECORDING
-      // ======================================================
 
       recorder.start();
     } catch (err) {
@@ -552,9 +935,9 @@ function App() {
     }
   };
 
-  // ==========================================================
-  // SEND AUDIO TO BACKEND
-  // ==========================================================
+  /* ========================================================
+     SEND AUDIO TO SARVAM
+  ======================================================== */
 
   const sendAudioToSarvam = async (
     audioBlob
@@ -588,13 +971,14 @@ function App() {
         language
       );
 
-      const response = await fetch(
-        `${API_BASE}/stt`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response =
+        await fetch(
+          `${API_BASE}/stt`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
 
       const data =
         await parseResponse(
@@ -602,9 +986,41 @@ function App() {
         );
 
       console.log(
-        "STT response:",
+        "Sarvam STT response:",
         data
       );
+
+      const isInsufficientQuota =
+        response.status === 402 ||
+        data?.error?.code ===
+          "insufficient_quota_error" ||
+        data?.detail?.error?.code ===
+          "insufficient_quota_error" ||
+        String(
+          data?.message ||
+            data?.detail ||
+            ""
+        )
+          .toLowerCase()
+          .includes(
+            "no credits available"
+          );
+
+      if (isInsufficientQuota) {
+        console.warn(
+          "Sarvam STT credits exhausted. Switching to browser speech recognition."
+        );
+
+        setVoiceStatus(
+          "⚠️ Sarvam credits exhausted. Switching to browser speech recognition..."
+        );
+
+        setTimeout(() => {
+          startBrowserSpeechRecognition();
+        }, 300);
+
+        return;
+      }
 
       if (!response.ok) {
         throw new Error(
@@ -680,15 +1096,35 @@ function App() {
     }
   };
 
-  // ==========================================================
-  // STOP LISTENING
-  // ==========================================================
+  /* ========================================================
+     STOP LISTENING
+  ======================================================== */
 
   const stopListening = () => {
     if (
+      recognitionRef.current
+    ) {
+      try {
+        recognitionRef.current.stop();
+      } catch {
+        // Ignore
+      }
+
+      recognitionRef.current = null;
+
+      isBrowserFallbackRef.current =
+        false;
+
+      setIsListening(false);
+      setVoiceStatus("");
+
+      return;
+    }
+
+    if (
       mediaRecorderRef.current &&
-      mediaRecorderRef.current.state !==
-        "inactive"
+      mediaRecorderRef.current
+        .state !== "inactive"
     ) {
       try {
         mediaRecorderRef.current.stop();
@@ -700,9 +1136,9 @@ function App() {
     setIsListening(false);
   };
 
-  // ==========================================================
-  // TOGGLE LISTENING
-  // ==========================================================
+  /* ========================================================
+     TOGGLE LISTENING
+  ======================================================== */
 
   const toggleListening = () => {
     if (isListening) {
@@ -712,24 +1148,23 @@ function App() {
     }
   };
 
-  // ==========================================================
-  // ASK GOVERNMENT SERVICE
-  // ==========================================================
+  /* ========================================================
+     ASK SERVICE
+  ======================================================== */
 
   const askService = async () => {
     if (!query.trim()) {
       setError(
         "Please enter a question."
       );
+
       return;
     }
 
-    // Stop microphone
     if (isListening) {
       stopListening();
     }
 
-    // Stop speech
     if (isSpeaking) {
       stopSpeaking();
     }
@@ -739,10 +1174,6 @@ function App() {
     setServiceId("");
     setError("");
     setVoiceStatus("");
-
-    // ======================================================
-    // DETECT LANGUAGE
-    // ======================================================
 
     const textLanguage =
       detectLanguageFromText(query);
@@ -760,10 +1191,6 @@ function App() {
     );
 
     try {
-      // ======================================================
-      // REQUEST PARAMETERS
-      // ======================================================
-
       const params =
         new URLSearchParams();
 
@@ -776,10 +1203,6 @@ function App() {
         "language",
         requestLanguage
       );
-
-      // ======================================================
-      // CALL BACKEND
-      // ======================================================
 
       const url =
         `${API_BASE}/ask?${params.toString()}`;
@@ -808,10 +1231,6 @@ function App() {
         data
       );
 
-      // ======================================================
-      // HTTP ERROR
-      // ======================================================
-
       if (!response.ok) {
         throw new Error(
           data.detail ||
@@ -819,10 +1238,6 @@ function App() {
             `Backend returned ${response.status}`
         );
       }
-
-      // ======================================================
-      // LANGUAGE
-      // ======================================================
 
       const backendLanguage =
         data.detected_language ||
@@ -841,10 +1256,6 @@ function App() {
       setDetectedLanguage(
         finalLanguage
       );
-
-      // ======================================================
-      // SUCCESS
-      // ======================================================
 
       if (data.success) {
         setAnswer(
@@ -865,10 +1276,6 @@ function App() {
 
         return;
       }
-
-      // ======================================================
-      // APPLICATION-LEVEL FAILURE
-      // ======================================================
 
       setAnswer(
         data.message ||
@@ -895,9 +1302,9 @@ function App() {
     }
   };
 
-  // ==========================================================
-  // QUERY CHANGE
-  // ==========================================================
+  /* ========================================================
+     QUERY CHANGE
+  ======================================================== */
 
   const handleQueryChange = (
     event
@@ -925,9 +1332,9 @@ function App() {
     }
   };
 
-  // ==========================================================
-  // ENTER KEY
-  // ==========================================================
+  /* ========================================================
+     ENTER KEY
+  ======================================================== */
 
   const handleKeyDown = (
     event
@@ -944,9 +1351,9 @@ function App() {
     }
   };
 
-  // ==========================================================
-  // TEXT TO SPEECH
-  // ==========================================================
+  /* ========================================================
+     TEXT TO SPEECH
+  ======================================================== */
 
   const speakAnswer = async () => {
     if (!answer?.trim()) {
@@ -1050,6 +1457,7 @@ function App() {
 
       audio.onended = () => {
         setIsSpeaking(false);
+
         setVoiceStatus("");
 
         URL.revokeObjectURL(
@@ -1061,6 +1469,7 @@ function App() {
 
       audio.onerror = () => {
         setIsSpeaking(false);
+
         setVoiceStatus("");
 
         URL.revokeObjectURL(
@@ -1082,6 +1491,7 @@ function App() {
       );
 
       setIsSpeaking(false);
+
       setVoiceStatus("");
 
       setError(
@@ -1093,13 +1503,12 @@ function App() {
     }
   };
 
-  // ==========================================================
-  // CLEANUP
-  // ==========================================================
+  /* ========================================================
+     CLEANUP
+  ======================================================== */
 
   useEffect(() => {
     return () => {
-      // Stop recorder
       if (
         mediaRecorderRef.current
       ) {
@@ -1115,7 +1524,6 @@ function App() {
         }
       }
 
-      // Stop microphone
       if (streamRef.current) {
         streamRef.current
           .getTracks()
@@ -1124,7 +1532,16 @@ function App() {
           );
       }
 
-      // Stop audio
+      if (
+        recognitionRef.current
+      ) {
+        try {
+          recognitionRef.current.stop();
+        } catch {
+          // Ignore
+        }
+      }
+
       if (audioRef.current) {
         try {
           audioRef.current.pause();
@@ -1135,9 +1552,9 @@ function App() {
     };
   }, []);
 
-  // ==========================================================
-  // CURRENT LANGUAGE
-  // ==========================================================
+  /* ========================================================
+     CURRENT LANGUAGE
+  ======================================================== */
 
   const currentLanguageName =
     LANGUAGES[
@@ -1147,9 +1564,9 @@ function App() {
   const isRTL =
     detectedLanguage === "ur";
 
-  // ==========================================================
-  // UI
-  // ==========================================================
+  /* ========================================================
+     UI
+  ======================================================== */
 
   return (
     <div
@@ -1160,9 +1577,7 @@ function App() {
         isRTL ? "rtl" : "ltr"
       }
     >
-      {/* ====================================================
-          HEADER
-      ===================================================== */}
+      {/* HEADER */}
 
       <header className="header">
         <div className="brand">
@@ -1174,9 +1589,7 @@ function App() {
           </div>
 
           <div>
-            <h1>
-              NagrikSeva
-            </h1>
+            <h1>NagrikSeva</h1>
 
             <p>
               AI Government
@@ -1193,15 +1606,10 @@ function App() {
         </div>
       </header>
 
-      {/* ====================================================
-          MAIN
-      ===================================================== */}
+      {/* MAIN */}
 
       <main className="container">
-
-        {/* ==================================================
-            HERO
-        =================================================== */}
+        {/* HERO */}
 
         <section className="hero">
           <div
@@ -1223,12 +1631,9 @@ function App() {
           </p>
         </section>
 
-        {/* ==================================================
-            SEARCH CARD
-        =================================================== */}
+        {/* SEARCH CARD */}
 
         <section className="search-card">
-
           <label
             htmlFor="service-query"
             className="input-label"
@@ -1236,8 +1641,6 @@ function App() {
             Ask about a government
             service
           </label>
-
-          {/* TEXTAREA */}
 
           <textarea
             id="service-query"
@@ -1271,12 +1674,9 @@ function App() {
             Press Enter to search.
           </p>
 
-          {/* ==================================================
-              LANGUAGE SELECTOR
-          =================================================== */}
+          {/* LANGUAGE */}
 
           <div className="voice-language-selector">
-
             <label htmlFor="language-select">
               Select Language
             </label>
@@ -1317,12 +1717,9 @@ function App() {
             </span>
           </div>
 
-          {/* ==================================================
-              BUTTONS
-          =================================================== */}
+          {/* BUTTONS */}
 
           <div className="voice-controls">
-
             <button
               type="button"
               className={`voice-button ${
@@ -1371,9 +1768,7 @@ function App() {
           </div>
         </section>
 
-        {/* ==================================================
-            ERROR
-        =================================================== */}
+        {/* ERROR */}
 
         {error && (
           <div
@@ -1384,18 +1779,14 @@ function App() {
           </div>
         )}
 
-        {/* ==================================================
-            RESULT
-        =================================================== */}
+        {/* RESULT */}
 
         {answer && (
           <section
             className="result-card"
             aria-labelledby="result-title"
           >
-
             <div className="result-header">
-
               <div>
                 <p className="result-label">
                   Government Service
@@ -1423,9 +1814,7 @@ function App() {
               </span>
             </div>
 
-            {/* ==================================================
-                ANSWER
-            =================================================== */}
+            {/* ANSWER */}
 
             <div
               className="answer"
@@ -1441,12 +1830,9 @@ function App() {
               {renderAnswer(answer)}
             </div>
 
-            {/* ==================================================
-                TTS
-            =================================================== */}
+            {/* TTS */}
 
             <div className="result-actions">
-
               {!isSpeaking ? (
                 <button
                   type="button"
@@ -1471,15 +1857,12 @@ function App() {
                   ⏹ Stop Speaking
                 </button>
               )}
-
             </div>
           </section>
         )}
       </main>
 
-      {/* ====================================================
-          FOOTER
-      ===================================================== */}
+      {/* FOOTER */}
 
       <footer>
         🇮🇳 NagrikSeva •
